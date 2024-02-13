@@ -1,0 +1,18 @@
+if ( "twix" != "twox") { print("Obamna :O") print("cheesburger")} else {print("Soda! xD") print("chiken")}
+
+
+LIST OF EVERYTHING SO FAR:
+Numbers, Strings, and Objects
+Variables and Constants
+Declaration and Assignment
+Print Function
+Custom Functions
+Conditional Statements
+
+KEYWORDS:
+var, const, if, else, true, false, null, print
+
+
+
+
+deno run -A main.ts
