@@ -4,12 +4,15 @@ export type NodeType =
     | "Declar"
     | "Function"
     | "Condition"
+    | "Logic"
     | "WLoop"
+    | "FLoop"
 
     //VALUES
     | "Identifier" 
     | "Number" 
     | "Object"
+    | "List"
     | "Property"
     | "String"
 
@@ -17,6 +20,8 @@ export type NodeType =
     | "Assign"
     | "Binary" 
     | "Call" 
+    | "Compound Binary"
+    | "Element"
     | "Member"
     | "Unary";
 
@@ -45,6 +50,13 @@ export interface Condition extends Stmt {
     ebody?: Stmt[];
 }
 
+export interface Logic extends Stmt {
+    kind: "Logic";
+    left: Expr;
+    logic: string;
+    right: Expr;
+}
+
 export interface Function extends Stmt {
     kind: "Function";
     params: string[];
@@ -58,6 +70,15 @@ export interface WLoop extends Stmt {
     body: Stmt[];
 }
 
+export interface FLoop extends Stmt {
+    kind: "FLoop";
+    assign?: Expr;
+    condition: Expr;
+    increment?: Expr;
+    version: string;
+    body: Stmt[];
+}
+
 export interface Expr extends Stmt {}
 
 export interface Assign extends Expr {
@@ -68,6 +89,20 @@ export interface Assign extends Expr {
 
 export interface BinaryExpr extends Expr {
     kind: "Binary"
+    left: Expr;
+    right: Expr;
+    operator: string;
+}
+
+export interface Unary extends Expr {
+    kind: "Unary"
+    operator: string;
+    on: Expr;
+    pre: boolean;
+}
+
+export interface Compound extends Expr {
+    kind: "Compound Binary"
     left: Expr;
     right: Expr;
     operator: string;
@@ -99,6 +134,12 @@ export interface Object extends Expr {
     props: Property[];
 }
 
+export interface List extends Expr {
+    kind: "List",
+    type: string,
+    elements: Expr[];
+}
+
 export interface Call extends Expr {
     kind: "Call"
     args: Expr[];
@@ -110,5 +151,11 @@ export interface Member extends Expr {
     object: Expr;
     prop: Expr;
     computed: boolean;
+}
+
+export interface Element extends Expr {
+    kind: "Element"
+    list: Expr,
+    index: Expr;
 }
 

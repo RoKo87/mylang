@@ -1,7 +1,7 @@
-import { BinaryExpr, Condition, Declar, Function, Program, Stmt } from "../../front/ast.ts";
+import { BinaryExpr, Condition, Declar, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BoolVal, CustomVal, INull, NullVal, RunVal } from "../value.ts";
+import { BoolVal, CustomVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
 import { evalCond } from "./expr.ts";
 
 export function evalProgram (program: Program, env: Environment): RunVal {
@@ -43,6 +43,58 @@ export function evalCondStmt(cond: Condition, env: Environment): RunVal {
             result = evaluate(stmt, scope);
         }
     }
+
+    return {type: "null", value: null} as NullVal;
+}
+
+export function evalWLoop(wloop: WLoop, env: Environment): RunVal {
+    let cnode = (wloop.condition as BinaryExpr)
+    while ((evalCond(evaluate(cnode.left, env), evaluate(cnode.right, env), 
+    cnode.operator) as BoolVal).value == true) {
+        let result: RunVal = INull();
+        const scope = new Environment(env);
+        for (const stmt of wloop.body) {
+            result = evaluate(stmt, scope);
+        }
+    } 
+
+    return {type: "null", value: null} as NullVal;
+}
+
+export function evalFLoop(wloop: FLoop, env: Environment): RunVal {
+    let version: string = (wloop.version)
+    const scope = new Environment(env);
+    if (version == "regular") {
+        let index = evalDecl(wloop.assign as Declar, scope);
+        let cond = (wloop.condition as BinaryExpr);
+        if (index.type != "number") throw "For this type of foor loop declaration, the local variable must be assigned a number."
+        while ((evalCond(evaluate(cond.left, scope), evaluate(cond.right, scope), 
+        cond.operator) as BoolVal).value == true) {
+            let result: RunVal = INull();
+            for (const stmt of wloop.body) {
+                result = evaluate(stmt, scope);
+            }
+            result = evaluate(wloop.increment, scope);
+        }
+    } else if (version == "fixed") {
+        let index = evaluate(wloop.condition, env) as NumberVal;
+        let loops = 0;
+        while (loops < index.value) {
+            let result: RunVal = INull();
+            for (const stmt of wloop.body) {
+                result = evaluate(stmt, scope);
+            }
+            loops++;
+        }
+    }
+    // while ((evalCond(evaluate(cnode.left, env), evaluate(cnode.right, env), 
+    // cnode.operator) as BoolVal).value == true) {
+    //     let result: RunVal = INull();
+    //     const scope = new Environment(env);
+    //     for (const stmt of wloop.body) {
+    //         result = evaluate(stmt, scope);
+    //     }
+    // } 
 
     return {type: "null", value: null} as NullVal;
 }

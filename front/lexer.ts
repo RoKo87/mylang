@@ -22,9 +22,8 @@ export enum TType {
     OpenPar, ClosePar,
     OpenSB, CloseSB,
     OpenCB, CloseCB,
-    BinOp,
+    BinOp, CompOp, LogOp, UnOp,
     Equals,
-    Cequals,
 
     Semi,
     Comma,
@@ -35,7 +34,11 @@ export enum TType {
     Const, Let,
     Function,
     If, Else,
-    While,
+    While, For,
+
+    //Data Structures
+    List,
+
     EOF,
 }
 
@@ -47,6 +50,10 @@ let KW: Record<string, TType> = {
     "if": TType.If,
     "else": TType.Else,
     "while": TType.While,
+    "for": TType.For,
+
+    "Stack": TType.List,
+    "Queue": TType.List,
 }
 
 if (language == "spanish") {
@@ -57,6 +64,10 @@ if (language == "spanish") {
         "si": TType.If,
         "sino": TType.Else,
         "mientras": TType.While,
+        "por": TType.For,
+        
+        "Pila": TType.List,
+        "Cola": TType.List,
     }
 }
 
@@ -102,8 +113,13 @@ export function tokenize (source:string): Token[] {
             tokens.push(addToken(src.shift(), TType.OpenCB));
         else if (src[0] == '}')
             tokens.push(addToken(src.shift(), TType.CloseCB));
-        else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') 
-            tokens.push(addToken(src.shift(), TType.BinOp));
+        else if (src[0] == '&' || src[0] == '|')
+            tokens.push(addToken(src.shift(), TType.LogOp));
+        else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') { 
+            if (src[1] == '=') 
+                tokens.push(addToken(src.shift() + src.shift(), TType.CompOp));
+            else tokens.push(addToken(src.shift(), TType.BinOp));
+        }
         else if (src[0] == '=') {
             if (src[1] == '=') {
                 tokens.push(addToken("==", TType.BinOp));
@@ -127,7 +143,7 @@ export function tokenize (source:string): Token[] {
                 tokens.push(addToken("!=", TType.BinOp));
                 src.shift(); src.shift();
             } 
-            // else tokens.push(addToken(src.shift(), TType.BinOp));
+            else tokens.push(addToken(src.shift(), TType.UnOp));
         }
         else if (src[0] == ';')
             tokens.push(addToken(src.shift(), TType.Semi));
@@ -147,6 +163,8 @@ export function tokenize (source:string): Token[] {
                         str += "\""
                     } else if (src[1] == "\\") {
                         str += "\\"
+                    } else if (src[1] == "n") {
+                        str += "\n"
                     }
                     src.shift(); src.shift();
                 } else {

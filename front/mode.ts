@@ -1,37 +1,45 @@
-export type Language = "regular" | "spanish" | "ht";
+export type Language = "regular" | "spanish"
 
 
 
 export const LMap: Record<Language, Record<string, string>> = {
     "regular": {
+        "add": "add",
+        "ask": "ask",
         "let": "let",
         "const": "const",
+        "contains": "contains",
         "func": "func",
         "true": "true",
         "false": "false",
+        "index": "index",
+        "length": "length",
         "null": "null",
         "print": "print",
         "println": "println",
+        "Queue": "Queue",
+        "remove": "remove",
+        "Stack": "Stack",
+        "sub": "sub",
     },
     "spanish": {
-        "let": "let",
+        "add": "agrega",
+        "ask": "pide",
+        "let": "let", //not used
         "const": "const",
+        "contains": "contiene",
         "func": "func",
         "true": "cierto",
         "false": "falso",
+        "index": "índice",
+        "length": "largo",
         "null": "nulo",
         "print": "imprime",
         "println": "imprimeln",
-    },
-    "ht": {
-        "let": "let",
-        "const": "const",
-        "func": "func",
-        "true": "cierto",
-        "false": "falso",
-        "null": "nulo",
-        "print": "imprime",
-        "println": "imprimeln",
+        "Queue": "Cola",
+        "remove": "quita",
+        "Stack": "Pila",
+        "sub": "sub",
     }
 }
 

@@ -2,7 +2,7 @@ import { Stmt } from "../front/ast.ts";
 import Environment from "./environment.ts";
 
 export type ValueType = "null" | "number" | "boolean" | "string" 
-| "object" | "native" | "custom";
+| "object" | "native" | "custom" | "list";
 
 export interface RunVal {
     type: ValueType;
@@ -33,6 +33,12 @@ export interface ObjVal extends RunVal {
     props: Map<string, RunVal>;
 }
 
+export interface ListVal extends RunVal {
+    type: "list",
+    class: string,
+    elements: RunVal[];
+}
+
 export function INum(n = 0) {
     return {type: "number", value: n} as NumberVal;
 }
@@ -45,7 +51,7 @@ export function IBool(b = false) {
     return {type: "boolean", value: b} as BoolVal;
 }
 
-export type FunCall = (args: RunVal[], env: Environment) => RunVal;
+export type FunCall = (args: RunVal[], env: Environment, object?: Stmt) => RunVal;
 
 export interface NativeVal extends RunVal {
     type: "native";
