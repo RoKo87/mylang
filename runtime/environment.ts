@@ -43,7 +43,10 @@ export function gscope() {
     env.declare(langget(language, "ask"), INative((args, scope) => {
         if (args.length == 0) {
             throw `Must have a parameter for the ask() function.`;
-        } else return evaluate(parser.produceAST(prompt(args[0].value)), scope); }), true)
+        } else {
+            if (args[0].value == undefined) throw "you suck boy";
+            return evaluate(parser.produceAST(prompt(args[0].value)) , scope); } 
+    }), true) 
 
     env.declare(langget(language, "add"), INative((args, scope, object) => {
         let nlist;
