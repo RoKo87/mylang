@@ -1,7 +1,6 @@
+// deno-lint-ignore-file
+
 import { Language } from "./mode.ts";
-
-//let x = 45
-
 
 export let language: Language = setLang(prompt("Set language: "));
 
