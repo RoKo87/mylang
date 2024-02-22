@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import { Stmt } from "../front/ast.ts";
 import Environment from "./environment.ts";
 
