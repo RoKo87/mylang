@@ -8,6 +8,7 @@ export type ValueType = "null" | "number" | "boolean" | "string"
 
 export interface RunVal {
     type: ValueType;
+    value?: any; //test line
 }
 
 export interface NullVal extends RunVal {
