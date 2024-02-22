@@ -43,7 +43,7 @@ export function INum(n = 0) {
     return {type: "number", value: n} as NumberVal;
 }
 
-export function INull(n = 0) {
+export function INull(_n = 0) {
     return {type: "null", value: null} as NullVal;
 }
 
