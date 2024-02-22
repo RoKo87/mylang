@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 export type NodeType = 
     //STATEMENT
     | "Program" 
@@ -79,7 +81,9 @@ export interface FLoop extends Stmt {
     body: Stmt[];
 }
 
-export interface Expr extends Stmt {}
+export interface Expr extends Stmt {
+    kind: NodeType
+}
 
 export interface Assign extends Expr {
     kind: "Assign",
