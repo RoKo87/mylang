@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 //may need to import ValueType and INull
 import {RunVal, NumberVal, StringVal} from "./value.ts";
 //may need to import NodeType
