@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import {IBool, INative, INull, INum, ListVal, NumberVal, RunVal, StringVal} from "./value.ts";
 import {Language, langget, LMap} from "../front/mode.ts";
 import {language} from "../front/lexer.ts"
