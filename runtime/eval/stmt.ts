@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import { BinaryExpr, Condition, Declar, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
