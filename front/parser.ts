@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
