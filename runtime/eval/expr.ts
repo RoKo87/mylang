@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import { Assign, BinaryExpr, Call, Compound, Element, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
 import { language } from "../../front/lexer.ts";
 import { langget } from "../../front/mode.ts";
