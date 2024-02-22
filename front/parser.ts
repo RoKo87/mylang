@@ -446,11 +446,12 @@ export default class Parser {
 
     private parseMember(): Expr {
         let object = this.parseElement();
+        let property; let computed;
 
         while(this.peek().type == TType.Dot) {
             const operator = this.pop();
-            let property: Expr;
-            let computed: boolean;
+            property: Expr;
+            computed: boolean;
 
             if (operator.type == TType.Dot) {
                 computed = false;
