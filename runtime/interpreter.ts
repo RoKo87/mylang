@@ -52,6 +52,7 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
             return evalFLoop(astNode as FLoop, env);
         default:
             console.error("The interpretation of this node is under construction...", astNode);
+            throw "See above"
     
     }
 }

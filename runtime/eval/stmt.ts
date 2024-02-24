@@ -38,7 +38,7 @@ export function evalCondStmt(cond: Condition, env: Environment): RunVal {
         for (const stmt of cond.body) {
             result = evaluate(stmt, scope);
         }
-    } else if (cond.else) {
+    } else if (cond.else && cond.ebody) {
         let result: RunVal = INull();
         const scope = new Environment(env);
         for (const stmt of cond.ebody) {
@@ -63,6 +63,7 @@ export function evalWLoop(wloop: WLoop, env: Environment): RunVal {
     return {type: "null", value: null} as NullVal;
 }
 
+//argument wloop is a FLoop.
 export function evalFLoop(wloop: FLoop, env: Environment): RunVal {
     let version: string = (wloop.version)
     const scope = new Environment(env);
@@ -76,7 +77,7 @@ export function evalFLoop(wloop: FLoop, env: Environment): RunVal {
             for (const stmt of wloop.body) {
                 result = evaluate(stmt, scope);
             }
-            result = evaluate(wloop.increment, scope);
+            if (wloop.increment) result = evaluate(wloop.increment, scope);
         }
     } else if (version == "fixed") {
         let index = evaluate(wloop.condition, env) as NumberVal;

@@ -450,8 +450,6 @@ export default class Parser {
 
         while(this.peek().type == TType.Dot) {
             const operator = this.pop();
-            property: Expr;
-            computed: boolean;
 
             if (operator.type == TType.Dot) {
                 computed = false;

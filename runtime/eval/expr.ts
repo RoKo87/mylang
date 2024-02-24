@@ -28,7 +28,7 @@ export function evalMath(left: NumberVal, right: NumberVal, op: string): RunVal 
     return {value: res, type: "number"} as NumberVal;
 }
 
-export function evalCond(left: NumberVal | StringVal, right: NumberVal | StringVal, op: string): RunVal {
+export function evalCond(left: RunVal, right: RunVal, op: string): RunVal {
     let res = false;
     if (op == "==")
         res = left.value == right.value;
@@ -131,7 +131,7 @@ export function evalAssign (node: Assign, env: Environment): RunVal {
     const name = identifier.symbol;
     if (node.value.kind == "List") {
         return env.assign(name, evaluate(({kind: "List", type: (evaluate(identifier, env) as ListVal).class, 
-        elements: (node.value as List).elements}), env))
+        elements: (node.value as List).elements} as List), env))
     }
     return env.assign(name, evaluate(node.value, env));
     } else {
@@ -230,7 +230,7 @@ export function evalList (list: List, env: Environment): RunVal {
 export function evalCall (call: Call, env: Environment): RunVal {
     const args = call.args.map((arg) => evaluate(arg, env));
     let fn;
-    if (call.name.prop != undefined) {
+    if (call.name.kind != "Member") {
         fn = evaluate((call.name as Member).prop, env);
         console.log("In evalCall(): ", (call.name as Member).prop);
     }
@@ -238,7 +238,7 @@ export function evalCall (call: Call, env: Environment): RunVal {
 
     if (fn.type == "native") {
         let result;
-        if (call.name.kind != undefined) {result = (fn as NativeVal).call(args, env, call.name.object);}
+        if (call.name.kind != undefined) {result = (fn as NativeVal).call(args, env, (call.name as Member).object);}
         else {result = (fn as NativeVal).call(args, env);}
         return result;
     } 

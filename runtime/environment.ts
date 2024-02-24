@@ -45,7 +45,9 @@ export function gscope() {
             throw `Must have a parameter for the ask() function.`;
         } else {
             if (args[0].value == undefined) throw "you suck boy";
-            return evaluate(parser.produceAST(prompt(args[0].value)) , scope); } 
+            let pro = prompt(args[0].value);
+            if (pro == null) pro = "null"
+            return evaluate(parser.produceAST(pro) , scope); } 
     }), true) 
 
     env.declare(langget(language, "add"), INative((args, scope, object) => {
@@ -91,6 +93,7 @@ export function gscope() {
         } return nlist }), true)
     
     env.declare(langget(language, "contains"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object."
         let obj = evaluate(object, env);
         if (obj.type == "string") {
             let str = (obj as StringVal).value;
@@ -108,6 +111,7 @@ export function gscope() {
         return IBool(false); }), true)
 
     env.declare(langget(language, "index"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object."
         let obj = evaluate(object, env);
         let position = (args[1])? (args[1] as NumberVal): INum(0);
         if (obj.type == "string") {
@@ -126,6 +130,7 @@ export function gscope() {
         return INum(-1); }), true)
 
     env.declare(langget(language, "sub"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object."
         let obj = evaluate(object, env);
         let beginning = (args[0] as NumberVal).value;
         let end = (args[1])? (args[1] as NumberVal).value: undefined;
@@ -140,8 +145,7 @@ export function gscope() {
             if (end == undefined) end = arr.length;
             return {type: "list", class: lclass, elements: arr.slice(beginning, end)} as ListVal
         }
-        console.log(obj);
-        if (obj.type != "string" && obj.type != "list") throw "This function only accepts strings and lists as the object."
+        else throw "This function only accepts strings and lists as the object."
         }), true)
 
     return env;
@@ -165,9 +169,9 @@ export default class Environment {
 
 
     public declare (name: string, value: RunVal, lc: boolean): RunVal {
-        let env: Environment = undefined;
+        let env: Environment | undefined = undefined;
         try { env = this.resolve(name); }
-        catch (e: Exception) { }
+        catch (e) { }
         if (env != undefined) {
             throw `Variable ${name} already defined.`
         }
@@ -202,11 +206,8 @@ export default class Environment {
             return this;
         } else if (this.parent != undefined) {
             return this.parent.resolve(name);
-        } 
-
-        if (this.parent == undefined) {
+        } else if (this.parent == undefined) {
             throw `Variable "${name}" doesn't exist`
-        }
+        } else throw `An unspecified runtime error occured.`
     }
-
 }
