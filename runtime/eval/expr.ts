@@ -163,8 +163,8 @@ export function evalCompound (node: Compound, env: Environment): RunVal {
         let modop = node.operator.substring(0,1);
         res = evalMath(evaluate(node.left, env) as NumberVal, evaluate(node.right, env) as NumberVal, modop);
     }
-    
-    return env.assign(name, res);
+    if (res) return env.assign(name, res);
+    else throw `An unspecified runtime error occured.`;
 }
 
 export function evalObject (obj: Object, env: Environment): RunVal {
