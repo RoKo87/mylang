@@ -2,7 +2,7 @@
 import Parser from "./front/parser.ts";
 import Environment, { gscope } from "./runtime/environment.ts";
 import {evaluate} from "./runtime/interpreter.ts";
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 repl();
 //may need to be async
