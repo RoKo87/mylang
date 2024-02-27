@@ -168,7 +168,7 @@ export default class Environment {
     }
 
 
-    public declare (name: string, value: RunVal, lc: boolean): RunVal | undefined {
+    public declare (name: string, value: RunVal, lc: boolean): RunVal {
         let env: Environment | undefined = undefined;
         try { env = this.resolve(name); }
         catch (e) { }
