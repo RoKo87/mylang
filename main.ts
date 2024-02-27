@@ -15,16 +15,18 @@ function repl () {
             Deno.exit(1);
         }
         console.log("\nPARSING:")
-        const program = parser.produceAST(input);
-        console.log("\nSYNTAX TREE:")
-        console.log(program);
+        if (input) {
+            const program = parser.produceAST(input);
+            console.log("\nSYNTAX TREE:")
+            console.log(program);
 
-        console.log("\nOUTPUT:")
-        const result = evaluate(program, env);
+            console.log("\nOUTPUT:")
+            const result = evaluate(program, env);
 
-        console.log("\nEVALUATION:")
-        console.log(result);
-        // console.log(result.value);
-        console.log("\n\n");
+            console.log("\nEVALUATION:")
+            console.log(result);
+            // console.log(result.value);
+            console.log("\n\n");
+        }
     }
 }
