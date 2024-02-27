@@ -168,11 +168,12 @@ export default class Environment {
     }
 
 
-    public declare (name: string, value: RunVal, lc: boolean): RunVal {
+    public declare (name: string, value: RunVal, lc: boolean): RunVal | undefined {
         let env: Environment | undefined = undefined;
         try { env = this.resolve(name); }
         catch (e) { }
         if (env != undefined) {
+            console.log(env);
             throw `Variable ${name} already defined.`
         }
         this.variables.set(name, value);
