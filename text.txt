@@ -1,24 +1,2 @@
 var t = ask("Enter number")
 for (7) { t = !t print(t)}
-
-LIST OF EVERYTHING SO FAR:
-Numbers, Strings, and Objects
-Variables and Constants
-Declaration and Assignment
-Built-in Functions: Print, Println, Ask
-Making Functions in Code
-Conditional Statements
-While Loops
-For Loops (still no for-each loops)
-Compound Operators (+=, -=, etc...)
-String Length
-Arrays (Declaration, accessing by index)
-And, or, and not
-
-DEFINED WORDS:
-var, const, if, else, true, false, null, print, while, ask, length
-
-
-
-
-deno run -A main.ts

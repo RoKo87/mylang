@@ -2,15 +2,17 @@
 import Parser from "./front/parser.ts";
 import Environment, { gscope } from "./runtime/environment.ts";
 import {evaluate} from "./runtime/interpreter.ts";
+import * as fs from 'node:fs';
 
 repl();
 //may need to be async
 function repl () {
     const parser = new Parser();
     const env : Environment = gscope();
-    console.log("\nLet's go!");
+    console.log("\nglombus is coming.");
     while (true) {
-        const input = prompt(" ");
+        // const input = prompt(" ");
+        const input = fs.readFileSync("./text.txt", "utf-8");
         if (!input || input.includes("exit")) {
             Deno.exit(1);
         }
