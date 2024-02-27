@@ -230,7 +230,7 @@ export function evalList (list: List, env: Environment): RunVal {
 export function evalCall (call: Call, env: Environment): RunVal {
     const args = call.args.map((arg) => evaluate(arg, env));
     let fn;
-    if (call.name.kind != "Member") {
+    if (call.name.kind == "Member") {
         fn = evaluate((call.name as Member).prop, env);
         console.log("In evalCall(): ", (call.name as Member).prop);
     }
