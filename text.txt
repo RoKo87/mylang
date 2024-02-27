@@ -1,2 +1,2 @@
-var t = ask("Enter number")
+var t = 5532
 for (7) { t = !t print(t)}
