@@ -10,7 +10,7 @@ function repl () {
     const parser = new Parser();
     const env : Environment = gscope();
     console.log("\nglombus is coming.");
-    while (true) {
+    if (true) {
         // const input = prompt(" ");
         const input = fs.readFileSync("./text.txt", "utf-8");
         if (!input || input.includes("exit")) {
