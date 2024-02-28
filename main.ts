@@ -31,5 +31,5 @@ function repl () {
             console.log("\n\n");
         }
     }
-    catch (e) { console.log("you suck so much") }
+    catch (_e) { console.log("you suck so much") }
 }
