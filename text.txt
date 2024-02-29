@@ -1,4 +1,7 @@
-var:Stack s = [8, 4, 2, 5, 6, 8, 12]
-var:Queue q = [6, 8, 0, 6, 2, 5, 6]
-for (3) { q.add(s.remove()) }
-println(s) println(q)
+var:Stack s = [8, 4, 2, 5, 6, 8, 12];
+var:Queue q = [6, 8, 0, 6, 2, 5, 6];
+
+for (3) { 
+    q.add(s.remove()); 
+}
+println(s); println(q);

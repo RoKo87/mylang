@@ -100,7 +100,7 @@ export default class Parser {
             if (arg.type == TType.OpenSB) {
                 if (this.pop().type == TType.CloseSB) type = "array";
             } else if (arg.type == TType.List) type = arg.value;
-            console.log(type);
+            // console.log(type);
         }
         const identifier = this.expect(TType.Name, langerr(language, "e_varname")).value;
        
@@ -117,7 +117,7 @@ export default class Parser {
         if (type != undefined) 
             {decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
         else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
-        // this.expect(TType.Semi, "Statement must end with semicolon");
+        this.expect(TType.Semi, "Statement must end with semicolon");
         return decl;
     }
 
@@ -422,15 +422,22 @@ export default class Parser {
         if (this.peek().type == TType.OpenPar) {
             call = this.parseCall(call);
         }
-        
+        // if (this.pop().type != TType.ClosePar && this.peek().type != TType.Semi) 
+        //     throw "Expected semicolon at the end of statement.";
         return call;
     }
 
     private parseArgs(): Expr[] {
         this.expect(TType.OpenPar, "Expected open parenthesis");
         const args = this.peek().type == TType.ClosePar ? [] : this.parseArgList();
-
-        this.expect(TType.ClosePar, "Missing closing parenthesis for arguments");
+        let end = this.peek().type == TType.ClosePar ? this.peek() : this.pop();
+        if (end.type != TType.ClosePar) 
+            throw "Missing closing parenthesis for arguments";
+        this.pop();
+        end = this.peek();
+        if (end.type != TType.Semi && end.type != TType.ClosePar)
+            throw "Expected a semicolon at the end";
+        else if (end.type == TType.Semi) this.pop();
         return args;
     }
 

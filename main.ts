@@ -31,5 +31,5 @@ function repl () {
             console.log("\n\n");
         }
     }
-    catch (_e) { console.log("you suck so much") }
+    catch (e) { console.log("Main file error: ", e) }
 }

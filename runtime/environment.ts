@@ -59,7 +59,7 @@ export function gscope() {
         } else {
             let arr = (evaluate(object, env) as ListVal).elements; let addend = args[0];
             let position = (args[1])? (args[1] as NumberVal): undefined; let type = (evaluate(object, env) as ListVal).class;
-            console.log(type);
+            // console.log(type);
             if (args[1] != undefined && (type == langget(language, "Stack") || type ==  langget(language, "Queue")))
                 throw `The arguments provided are not compatible with this data structure.`
             if (position == undefined || position.value == arr.length) { arr.push(addend);}
@@ -77,7 +77,7 @@ export function gscope() {
             let position = (args[0])? (args[0] as NumberVal): undefined; let type = (evaluate(object, env) as ListVal).class;
             if (args[0] != undefined && (type == langget(language, "Stack") || type ==  langget(language, "Queue")))
                 throw `The arguments provided are not compatible with this data structure.`
-            let deleted;
+            let deleted : RunVal;
             if (position == undefined || position.value == arr.length - 1) { 
                 deleted = arr[arr.length - 1];
                 arr.splice(arr.length - 1, 1); 
@@ -90,7 +90,8 @@ export function gscope() {
             }
             nlist = {type: "list", class: (evaluate(object, env) as ListVal).class, elements: arr} as ListVal;
             env.assign((object as Identifier).symbol, nlist)  
-        } return nlist }), true)
+            return deleted 
+        } }), true)
     
     env.declare(langget(language, "contains"), INative((args, scope, object) => {
         if (object == undefined) throw "This member function does not have an object."

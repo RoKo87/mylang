@@ -232,7 +232,7 @@ export function evalCall (call: Call, env: Environment): RunVal {
     let fn;
     if (call.name.kind == "Member") {
         fn = evaluate((call.name as Member).prop, env);
-        console.log("In evalCall(): ", (call.name as Member).prop);
+        // console.log("In evalCall(): ", (call.name as Member).prop);
     }
     else fn = evaluate(call.name, env);
 
