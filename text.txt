@@ -5,3 +5,4 @@ for (3) {
     q.add(s.remove()); 
 }
 println(s); println(q);
+println(s.sub(3));
