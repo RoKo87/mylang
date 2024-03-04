@@ -240,6 +240,7 @@ export default class Parser {
 
     private parseExpr (): Expr {
         return this.parseAssign();
+        this.expect(TType.Semi, "Statement must end with semicolon");
     }
 
     private parseAssign(): Expr {
