@@ -240,6 +240,7 @@ export default class Parser {
 
     private parseExpr (): Expr {
         return this.parseAssign();
+        this.expect(TType.Semi, "Statement must end with semicolon");
     }
 
     private parseAssign(): Expr {
@@ -247,7 +248,6 @@ export default class Parser {
         if (this.peek().type == TType.Equals) {
             this.pop();
             const right = this.parseAssign();
-            this.expect(TType.Semi, "Statement must end with semicolon");
             return {value: right, to: left, kind: "Assign"} as Assign;
         }
         return left;
@@ -259,7 +259,6 @@ export default class Parser {
         || this.peek().value == "/=" || this.peek().value == "%=") {
             const operator = this.pop().value;
             const right = this.parseObject();
-            this.expect(TType.Semi, "Statement must end with semicolon");
             if (left.kind != "Identifier") 
                 throw "The left-hand side of a compound binary expression must be a variable.";
             left = {
@@ -368,7 +367,6 @@ export default class Parser {
         while (this.peek().value == "+" || this.peek().value == "-") {
             const operator = this.pop().value;
             const right = this.parseMultExpr();
-            this.expect(TType.Semi, "Statement must end with semicolon");
             left = {
                 kind: "Binary",
                 left,
