@@ -500,8 +500,7 @@ export default class Parser {
                 const value = this.parseExpr();
                 this.expect(TType.ClosePar, "Unexpected token found inside parenthesis. Expected closing parenthesis.");
                 return value;
-            case TType.Semi:
-                continue;
+            case TType.Semi: break;
             default:
                 console.error("Unexpected toxen found during parsing: ", this.peek());
                 //Trick the compiler for TS
