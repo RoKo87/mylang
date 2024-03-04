@@ -240,7 +240,6 @@ export default class Parser {
 
     private parseExpr (): Expr {
         return this.parseAssign();
-        this.expect(TType.Semi, "Statement must end with semicolon");
     }
 
     private parseAssign(): Expr {
@@ -501,6 +500,8 @@ export default class Parser {
                 const value = this.parseExpr();
                 this.expect(TType.ClosePar, "Unexpected token found inside parenthesis. Expected closing parenthesis.");
                 return value;
+            case TType.Semi:
+                continue;
             default:
                 console.error("Unexpected toxen found during parsing: ", this.peek());
                 //Trick the compiler for TS
