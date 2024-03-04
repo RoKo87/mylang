@@ -7,3 +7,7 @@ for (3) {
 }
 println(s); println(q);
 println(t.sub(3)); println(q.sub(3));
+
+var x = 4; 
+x += 5 * 7;
+println(x);
