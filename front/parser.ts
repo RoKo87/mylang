@@ -385,7 +385,6 @@ export default class Parser {
         while (this.peek().value == "*" || (this.peek().value == "/" || this.peek().value == "%")) {
             const operator = this.pop().value;
             const right = this.parsePrimaryExpr();
-            this.expect(TType.Semi, "Statement must end with semicolon");
             left = {
                 kind: "Binary",
                 left,
