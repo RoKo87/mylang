@@ -1,13 +1,23 @@
-var:Stack s = [8, 4, 2, 5, 6, 8, 12];
-var:Queue q = [6, 8, 0, 6, 2, 5, 6];
-var:[] t = [1, 2, 3, 4, 5];
+class Bread = {
+    var size;
+    var color;
+    var thick;
 
-for (3) { 
-    q.add(s.remove()); 
+    func bake() {
+        size += 2;
+        thick = true;
+    }
+
+    func stale() {
+        size -= 2;
+        thick = false;
+    }
+
+    constructor(s, t, c) {
+        size = s;
+        thick = t;
+        color = c;
+    }
 }
-println(s); println(q);
-println(t.sub(3)); println(q.sub(3));
 
-var x = 4; 
-x = x + 5 * 7;
-println(x);
+var slice = new Bread(6, 5, "brown");

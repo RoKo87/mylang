@@ -30,8 +30,8 @@ export enum TType {
     Dot,
 
     //Keywords
-    Const, Let,
-    Function,
+    Const, Let, Class, New,
+    Function, Constructor,
     If, Else,
     While, For,
 
@@ -50,6 +50,9 @@ let KW: Record<string, TType> = {
     "else": TType.Else,
     "while": TType.While,
     "for": TType.For,
+    "class": TType.Class,
+    "constructor": TType.Constructor,
+    "new": TType.New,
 
     "Stack": TType.List,
     "Queue": TType.List,
@@ -64,7 +67,9 @@ if (language == "spanish") {
         "sino": TType.Else,
         "mientras": TType.While,
         "por": TType.For,
-        
+        "clase": TType.Class,
+        "crea": TType.New,
+
         "Pila": TType.List,
         "Cola": TType.List,
     }
@@ -116,7 +121,7 @@ export function tokenize (source:string): Token[] {
             tokens.push(addToken(src.shift(), TType.LogOp));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') {
             let op = src.shift(); 
-            if (src[1] == '=' && op) 
+            if (src[0] == '=' && op != undefined) 
                 tokens.push(addToken(op + src.shift(), TType.CompOp));
             else tokens.push(addToken(op, TType.BinOp));
         }

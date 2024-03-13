@@ -4,7 +4,7 @@ import { Stmt } from "../front/ast.ts";
 import Environment from "./environment.ts";
 
 export type ValueType = "null" | "number" | "boolean" | "string" 
-| "object" | "native" | "custom" | "list";
+| "object" | "native" | "custom" | "list" | "class" | "constructor" | "class object";
 
 export interface RunVal {
     type: ValueType;
@@ -26,6 +26,13 @@ export interface StringVal extends RunVal {
     value: string;
 }
 
+export interface ClassVal extends RunVal {
+    type: "class",
+    fields: Map<string, RunVal>;
+    ctors: CustomVal[];
+    methods: CustomVal[];
+}
+
 export interface BoolVal extends RunVal {
     type: "boolean",
     value: boolean;
@@ -35,6 +42,13 @@ export interface ObjVal extends RunVal {
     type: "object",
     props: Map<string, RunVal>;
 }
+
+export interface ClassObjVal extends RunVal {
+    type: "class object",
+    class_value: ClassVal;
+    fields: Map<string, RunVal>;
+}
+
 
 export interface ListVal extends RunVal {
     type: "list",
@@ -68,6 +82,13 @@ export function INative(call: FunCall) {
 export interface CustomVal extends RunVal {
     type: "custom";
     name: string,
+    params: string[],
+    envir: Environment;
+    body: Stmt[];
+}
+
+export interface CtorVal extends RunVal {
+    type: "constructor";
     params: string[],
     envir: Environment;
     body: Stmt[];

@@ -1,11 +1,11 @@
 // deno-lint-ignore-file
 
-import { Assign, BinaryExpr, Call, Compound, Element, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
+import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Expr, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
 import { language } from "../../front/lexer.ts";
 import { langget } from "../../front/mode.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BoolVal, CustomVal, IBool, INull, INum, ListVal, NativeVal, NumberVal, ObjVal, RunVal, StringVal } from "../value.ts";
+import { BoolVal, ClassObjVal, ClassVal, CustomVal, IBool, INull, INum, ListVal, NativeVal, NumberVal, ObjVal, RunVal, StringVal } from "../value.ts";
 
 export function evalMath(left: NumberVal, right: NumberVal, op: string): RunVal {
     let res = 0;
@@ -174,6 +174,34 @@ export function evalObject (obj: Object, env: Environment): RunVal {
         object.props.set(key, runval)
     }
     return object;
+}
+
+export function evalClassObj (obj: ClassObj, env: Environment): RunVal {
+    const class_value = (env.lookup(obj.cname)) as ClassVal;
+    let fields = class_value.fields;
+    const args = obj.args;
+    let cov : ClassObjVal = {type: "class object", class_value, fields};
+    for (const ctor of class_value.ctors) {
+        if (ctor.params.length == args.length) {
+            let params = new Map<string, Expr>(); let index = 0;
+            for (const param of ctor.params) {
+                params.set(param, args[index]);
+                index++;
+            }
+            for (const stmt of ctor.body) {
+                if (stmt.kind == "Assign") {
+                    let assign = stmt as Assign
+                    if (assign.value.kind == "Identifier" && (assign.value as Identifier).symbol != undefined ) {
+                        let par = (params.get((assign.value as Identifier).symbol) != undefined) ? 
+                            params.get((assign.value as Identifier).symbol) : params[0];
+                        fields.set((assign.to as Identifier).symbol, evaluate(par, env));
+                    }
+                }
+            }
+        }
+    }
+
+    return cov;
 }
 
 export function evalMember (mem: Member, env: Environment): RunVal {

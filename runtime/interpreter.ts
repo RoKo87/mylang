@@ -3,10 +3,10 @@
 //may need to import ValueType and INull
 import {RunVal, NumberVal, StringVal} from "./value.ts";
 //may need to import NodeType
-import {Assign, BinaryExpr, Call, Compound, Condition, Declar, Element, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Unary, WLoop} from "../front/ast.ts";
+import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Unary, WLoop} from "../front/ast.ts";
 import Environment from "./environment.ts";
-import { evalAssign, evalBinary, evalCall, evalCompound, evalElement, evalId, evalList, evalLogic, evalMember, evalObject, evalUnary } from "./eval/expr.ts";
-import { evalCondStmt, evalDecl, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
+import { evalAssign, evalBinary, evalCall, evalClassObj, evalCompound, evalElement, evalId, evalList, evalLogic, evalMember, evalObject, evalUnary } from "./eval/expr.ts";
+import { evalClass, evalCondStmt, evalDecl, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
 
 
 
@@ -41,6 +41,10 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
             return evalObject(astNode as Object, env);
         case "Call":
             return evalCall(astNode as Call, env);
+        case "Class":
+            return evalClass(astNode as Class, env);
+        case "Class Object":
+            return evalClassObj(astNode as ClassObj, env);
         case "Compound Binary":
             return evalCompound(astNode as Compound, env);
         case "Condition":

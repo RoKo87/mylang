@@ -1,9 +1,9 @@
 // deno-lint-ignore-file
 
-import { BinaryExpr, Condition, Declar, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
+import { BinaryExpr, Class, Condition, Constructor, Declar, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BoolVal, CustomVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
+import { BoolVal, ClassVal, CtorVal, CustomVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
 import { evalCond } from "./expr.ts";
 
 export function evalProgram (program: Program, env: Environment): RunVal {
@@ -27,6 +27,15 @@ export function evalFunc(decl: Function, env: Environment): RunVal {
     body: decl.body} as CustomVal;
 
     return env.declare(decl.name, func, true);
+}
+
+export function evalCtor(decl: Constructor, env: Environment, cl: string, iter: number): RunVal {
+    const func = {type: "constructor",
+    params: decl.params,
+    envir: env,
+    body: decl.body} as CtorVal;
+
+    return env.declare(cl+"{"+iter, func, true);
 }
 
 export function evalCondStmt(cond: Condition, env: Environment): RunVal {
@@ -90,14 +99,27 @@ export function evalFLoop(wloop: FLoop, env: Environment): RunVal {
             loops++;
         }
     }
-    // while ((evalCond(evaluate(cnode.left, env), evaluate(cnode.right, env), 
-    // cnode.operator) as BoolVal).value == true) {
-    //     let result: RunVal = INull();
-    //     const scope = new Environment(env);
-    //     for (const stmt of wloop.body) {
-    //         result = evaluate(stmt, scope);
-    //     }
-    // } 
-
     return {type: "null", value: null} as NullVal;
+}
+
+export function evalClass(cl: Class, env: Environment): RunVal {
+    const scope = new Environment(env);
+    let fields = new Map<string, RunVal>();
+    let methods = new Array<CustomVal>();
+    let ctors = new Array<CustomVal>();
+    for (const field of cl.fields) {
+        fields.set((field as Declar).identifier, evalDecl((field as Declar), scope));
+    }
+    for (const method of cl.methods) {
+        methods.push(evalFunc((method as Function), scope) as CustomVal);
+    }
+    for (const ctor of cl.ctors) {
+        let num = 0;
+        ctors.push(evalCtor((ctor as Constructor), scope, cl.name, num) as CustomVal);
+        num++;
+    }
+    env.declare(cl.name, {type: "class", fields, ctors, methods} as ClassVal, true);
+    return {type: "class", fields, ctors, methods} as ClassVal;
+    // const value = decl.value ? evaluate(decl.value, env) : INull();
+    // return env.declare(decl.identifier, value, decl.constant);
 }

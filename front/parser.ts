@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
@@ -53,7 +53,9 @@ export default class Parser {
         switch (this.peek().type) {
             case TType.Let: 
             case TType.Const: return this.parseDecl();
+            case TType.Class: return this.parseClass();
             case TType.Function: return this.parseFunc();
+            case TType.Constructor: return this.parseCtor();
             case TType.If: return this.parseCondition();
             case TType.While: return this.parseWLoop();
             case TType.For: return this.parseFLoop();
@@ -64,7 +66,7 @@ export default class Parser {
     parseFunc(): Stmt {
         this.pop(); //eat keyword
         const name = this.expect(TType.Name, langerr(language, "funcname")).value;
-        const args = this.parseArgs();
+        const args = this.parseArgs(false);
         //double check
         const params: string[] = []; 
         for (const arg of args) {
@@ -85,6 +87,34 @@ export default class Parser {
 
         this.expect(TType.CloseCB, langerr(language, "e_closecbf"));
         const fn = {body, name, params, kind: "Function"} as Function;
+
+        return fn;
+
+    }
+
+    parseCtor(): Stmt {
+        this.pop(); //eat "constructor"
+        const args = this.parseArgs(false);
+        //double check
+        const params: string[] = []; 
+        for (const arg of args) {
+            if (arg.kind !== "Identifier") {
+                console.log(arg);
+                throw langerr(language, "funcparam");
+            }
+            params.push((arg as Identifier).symbol);
+        }
+
+        this.expect(TType.OpenCB, langerr(language, "e_opencb"));
+
+        const body: Stmt[] = [];
+
+        while (this.peek().type !== TType.EOF && this.peek().type !== TType.CloseCB) {
+            body.push(this.parseStmt());
+        }
+
+        this.expect(TType.CloseCB, langerr(language, "e_closecbf"));
+        const fn = {body, params, kind: "Constructor"} as Constructor;
 
         return fn;
 
@@ -119,6 +149,26 @@ export default class Parser {
         else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
         this.expect(TType.Semi, "Statement must end with semicolon");
         return decl;
+    }
+
+    parseClass(): Stmt {
+        this.pop(); //pop class
+        const name = this.pop().value;
+        this.expect(TType.Equals, "Expected an equals sign");
+        this.expect(TType.OpenCB, "Expected an opening curly brace ({)");
+        let fields = new Array<Declar>;
+        let methods = new Array<Function>;
+        let ctors = new Array<Constructor>;
+        while (this.peek().type != TType.CloseCB) {
+            let dec = this.parseStmt();
+            if (dec.kind == "Declar") fields.push(dec as Declar);
+            else if (dec.kind == "Function") methods.push(dec as Function);
+            else if (dec.kind == "Constructor") ctors.push(dec as Constructor);
+            // console.log("In parseClass():       ",this.peek());
+        }
+        this.expect(TType.CloseCB, "Expected closing culry brace (})"); //pop }
+        return {kind: "Class", name, fields, ctors, methods} as Class;
+
     }
 
     parseCondition(): Stmt {
@@ -239,8 +289,18 @@ export default class Parser {
     }
 
     private parseExpr (): Expr {
-        return this.parseAssign();
+        console.log("In parseExpr():        ",this.peek());
+        if (this.peek().type == TType.New) return this.parseClassObj();
+        else return this.parseAssign();
         this.expect(TType.Semi, "Statement must end with semicolon");
+    }
+
+    private parseClassObj(): Expr {
+        this.pop(); //pop "new"
+        const cname = this.pop().value;
+        const args = this.parseArgs(false);
+        return {kind: "Class Object", cname, args} as ClassObj
+
     }
 
     private parseAssign(): Expr {
@@ -248,6 +308,7 @@ export default class Parser {
         if (this.peek().type == TType.Equals) {
             this.pop();
             const right = this.parseAssign();
+            this.expect(TType.Semi, "Statement must end with semicolon");
             return {value: right, to: left, kind: "Assign"} as Assign;
         }
         return left;
@@ -261,7 +322,8 @@ export default class Parser {
             const right = this.parseObject();
             if (left.kind != "Identifier") 
                 throw "The left-hand side of a compound binary expression must be a variable.";
-            left = {
+                this.expect(TType.Semi, "Statement must end with semicolon");
+                left = {
                 kind: "Compound Binary",
                 left,
                 right,
@@ -420,7 +482,7 @@ export default class Parser {
     }
 
     private parseCall(name: Expr): Expr {
-        let call: Expr = { kind: "Call", name, args: this.parseArgs(), } as Call;
+        let call: Expr = { kind: "Call", name, args: this.parseArgs(true), } as Call;
         if (this.peek().type == TType.OpenPar) {
             call = this.parseCall(call);
         }
@@ -429,7 +491,7 @@ export default class Parser {
         return call;
     }
 
-    private parseArgs(): Expr[] {
+    private parseArgs(semiReq: boolean): Expr[] {
         this.expect(TType.OpenPar, "Expected open parenthesis");
         const args = this.peek().type == TType.ClosePar ? [] : this.parseArgList();
         let end = this.peek().type == TType.ClosePar ? this.peek() : this.pop();
@@ -437,9 +499,9 @@ export default class Parser {
             throw "Missing closing parenthesis for arguments";
         this.pop();
         end = this.peek();
-        if (end.type != TType.Semi && end.type != TType.ClosePar)
+        if (end.type != TType.Semi && end.type != TType.ClosePar && semiReq)
             throw "Expected a semicolon at the end";
-        else if (end.type == TType.Semi) this.pop();
+        else if (end.type == TType.Semi && semiReq) this.pop();
         return args;
     }
 

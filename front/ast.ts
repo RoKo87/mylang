@@ -5,12 +5,15 @@ export type NodeType =
     | "Program" 
     | "Declar"
     | "Function"
+    | "Constructor"
     | "Condition"
     | "Logic"
     | "WLoop"
     | "FLoop"
 
     //VALUES
+    | "Class"
+    | "Class Object"
     | "Identifier" 
     | "Number" 
     | "Object"
@@ -66,6 +69,12 @@ export interface Function extends Stmt {
     body: Stmt[];
 }
 
+export interface Constructor extends Stmt {
+    kind: "Constructor";
+    params: string[];
+    body: Stmt[];
+}
+
 export interface WLoop extends Stmt {
     kind: "WLoop";
     condition: Expr;
@@ -105,6 +114,14 @@ export interface Unary extends Expr {
     pre: boolean;
 }
 
+export interface Class extends Stmt {
+    kind: "Class";
+    name: string;
+    fields: Declar[];
+    ctors: Constructor[];
+    methods: Function[];
+}
+
 export interface Compound extends Expr {
     kind: "Compound Binary"
     left: Expr;
@@ -136,6 +153,12 @@ export interface Property extends Expr {
 export interface Object extends Expr {
     kind: "Object"
     props: Property[];
+}
+
+export interface ClassObj extends Expr {
+    kind: "Class Object"
+    cname: string;
+    args: Expr[];
 }
 
 export interface List extends Expr {
