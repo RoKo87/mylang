@@ -120,8 +120,14 @@ export function tokenize (source:string): Token[] {
         else if (src[0] == '&' || src[0] == '|')
             tokens.push(addToken(src.shift(), TType.LogOp));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') {
+            const op;
+            if (src[0] == '+') op = '+';
+            if (src[0] == '-') op = '-';
+            if (src[0] == '*') op = '*';
+            if (src[0] == '/') op = '/';
+            if (src[0] == '%') op = '%';
             if (src[1] == '=') {
-                const op = src.shift();
+                src.shift(); src.shift();
                 tokens.push(addToken(op + "=", TType.CompOp));
             }
             else if (src[0] != undefined && src[0] != undefined) {
