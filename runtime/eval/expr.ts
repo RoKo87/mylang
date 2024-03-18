@@ -193,7 +193,7 @@ export function evalClassObj (obj: ClassObj, env: Environment): RunVal {
                     let assign = stmt as Assign
                     if (assign.value.kind == "Identifier" && (assign.value as Identifier).symbol != undefined ) {
                         let par = (params.get((assign.value as Identifier).symbol) != undefined) ? 
-                            params.get((assign.value as Identifier).symbol) : params[0];
+                            params.get((assign.value as Identifier).symbol) : "";
                         fields.set((assign.to as Identifier).symbol, evaluate(par, env));
                     }
                 }
