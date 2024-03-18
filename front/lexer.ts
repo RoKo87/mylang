@@ -120,7 +120,7 @@ export function tokenize (source:string): Token[] {
         else if (src[0] == '&' || src[0] == '|')
             tokens.push(addToken(src.shift(), TType.LogOp));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') {
-            const op;
+            let op;
             if (src[0] == '+') op = '+';
             if (src[0] == '-') op = '-';
             if (src[0] == '*') op = '*';
