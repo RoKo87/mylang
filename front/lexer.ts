@@ -120,10 +120,9 @@ export function tokenize (source:string): Token[] {
         else if (src[0] == '&' || src[0] == '|')
             tokens.push(addToken(src.shift(), TType.LogOp));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') {
-            let op = src.shift(); 
-            if (src[0] == '=' && op != undefined) 
-                tokens.push(addToken(op + src.shift(), TType.CompOp));
-            else tokens.push(addToken(op, TType.BinOp));
+            if (src[1] == '=') 
+                tokens.push(addToken(src.shift() + src.shift(), TType.CompOp));
+            else tokens.push(addToken(src.shift(), TType.BinOp));
         }
         else if (src[0] == '=') {
             if (src[1] == '=') {
