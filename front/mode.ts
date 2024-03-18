@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-export type Language = "regular" | "spanish"
+export type Language = "regular" | "spanish" | "ht"
 
 
 
@@ -38,6 +38,25 @@ export const LMap: Record<Language, Record<string, string>> = {
         "null": "nulo",
         "print": "imprime",
         "println": "imprimeln",
+        "Queue": "Cola",
+        "remove": "quita",
+        "Stack": "Pila",
+        "sub": "sub",
+    }
+    "ht": {
+        "add": "agrega",
+        "ask": "preesha",
+        "let": "let", //not used
+        "const": "const",
+        "contains": "contiene",
+        "func": "func",
+        "true": "tej",
+        "false": "allen",
+        "index": "índice",
+        "length": "largo",
+        "null": "nulo",
+        "print": "huff",
+        "println": "huffln",
         "Queue": "Cola",
         "remove": "quita",
         "Stack": "Pila",
