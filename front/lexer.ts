@@ -120,13 +120,12 @@ export function tokenize (source:string): Token[] {
         else if (src[0] == '&' || src[0] == '|')
             tokens.push(addToken(src.shift(), TType.LogOp));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') {
-            if (src[1] == '=' && src[0] != undefined && src[1] != undefined) {
-                const op : string = src.shift();
-                const eq : string = src.shift();
-                tokens.push(addToken(op + eq, TType.CompOp));
+            if (src[1] == '=') {
+                const op = src.shift();
+                tokens.push(addToken(op + "=", TType.CompOp));
             }
-            else if (src[0] != undefined && src[1] != undefined) {
-                const op : string = src.shift();
+            else if (src[0] != undefined && src[0] != undefined) {
+                const op = src.shift();
                 tokens.push(addToken(op, TType.BinOp));
             }
         }
