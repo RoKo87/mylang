@@ -52,7 +52,7 @@ export default class Parser {
         let t = this.peek().type;
         switch (this.peek().type) {
             case TType.Let: 
-            case TType.Const: return this.parseDecl();
+            case TType.Const: return this.parseDecl(true);
             case TType.Class: return this.parseClass();
             case TType.Function: return this.parseFunc();
             case TType.Constructor: return this.parseCtor();
@@ -120,7 +120,7 @@ export default class Parser {
 
     }
 
-    parseDecl(): Stmt {
+    parseDecl(semiReq : boolean): Stmt {
         const lc = this.pop().type == TType.Const;
         let type: string | undefined = undefined;
         //lists
@@ -135,7 +135,7 @@ export default class Parser {
         const identifier = this.expect(TType.Name, langerr(language, "e_varname")).value;
        
         //semicolon
-        if (this.peek().type == TType.Semi) {
+        if (this.peek().type == TType.Semi && semiReq) {
             this.pop();
             if (lc) 
                 throw "Constant declaration must be assigned a value.";
@@ -242,7 +242,7 @@ export default class Parser {
         let assign: Expr;
         this.expect(TType.OpenPar, "Expected open parenthesis that begins condition.");
         if (this.peek().type == TType.Let) {
-            assign = this.parseDecl();
+            assign = this.parseDecl(false);
         } else if (this.peek().type == TType.Number || this.peek().type == TType.Name) {
             let condition = this.parseExpr();
             this.expect(TType.ClosePar, "Expected closing parenthesis that ends for loop initialization.");
