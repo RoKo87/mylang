@@ -323,7 +323,7 @@ export default class Parser {
             const right = this.parseObject();
             if (left.kind != "Identifier") 
                 throw "The left-hand side of a compound binary expression must be a variable.";
-                if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
+                this.expect(TType.Semi, "Statement must end with semicolon");
                 left = {
                 kind: "Compound Binary",
                 left,
