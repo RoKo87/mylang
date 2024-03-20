@@ -271,7 +271,7 @@ export default class Parser {
 
         let increment: Expr;
         if (this.peek().value == (assign as Declar).identifier) {
-            increment = this.parseAssign();
+            increment = this.parseAssign(false);
         } else throw "Invalid for loop step statement.";
         
         this.expect(TType.ClosePar, "Expected closing parenthesis that ends for loop initialization.");
@@ -292,7 +292,7 @@ export default class Parser {
     private parseExpr (): Expr {
         console.log("In parseExpr():        ",this.peek());
         if (this.peek().type == TType.New) return this.parseClassObj();
-        else return this.parseAssign();
+        else return this.parseAssign(true);
         this.expect(TType.Semi, "Statement must end with semicolon");
     }
 
@@ -304,12 +304,12 @@ export default class Parser {
 
     }
 
-    private parseAssign(): Expr {
+    private parseAssign(semiReq : boolean): Expr {
         const left = this.parseCompound();
         if (this.peek().type == TType.Equals) {
             this.pop();
-            const right = this.parseAssign();
-            this.expect(TType.Semi, "Statement must end with semicolon");
+            const right = this.parseAssign(false);
+            if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
             return {value: right, to: left, kind: "Assign"} as Assign;
         }
         return left;
@@ -323,7 +323,7 @@ export default class Parser {
             const right = this.parseObject();
             if (left.kind != "Identifier") 
                 throw "The left-hand side of a compound binary expression must be a variable.";
-                this.expect(TType.Semi, "Statement must end with semicolon");
+                if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
                 left = {
                 kind: "Compound Binary",
                 left,
