@@ -7,7 +7,7 @@ export let language: Language = setLang(prompt("Set language: "));
 function setLang(str: string | null): Language {
     if (str == "spanish") {
         return "spanish";
-    } else return "huff";
+    } else return "ht";
 }
 
 export enum TType {
