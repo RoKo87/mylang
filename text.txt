@@ -1,23 +1,16 @@
-class Bread = {
-    var size;
-    var color;
-    var thick;
-
-    func bake() {
-        size += 2;
-        thick = true;
-    }
-
-    func stale() {
-        size -= 2;
-        thick = false;
-    }
-
-    constructor(s, t, c) {
-        size = s;
-        thick = t;
-        color = c;
+lethimcook selectionSort(arr) {
+    george (cook i = 0, i < arr.length, i = i + 1) {
+        cook min = i;
+        george (cook j = i + 1, j < arr.length, j++) {
+            bill (arr[j] < arr[min]) min = j;
+        }
+        bill (i != min) {
+            cook temp = arr[i];
+            arr[i] = arr[min];
+            arr[min] = temp;
+        }
     }
 }
 
-var slice = new Bread(6, 5, "brown");
+cook:[] arr = [2, 1, 56, 420, 81, 3, 5, 7];
+print(selectionSort(arr));
