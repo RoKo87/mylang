@@ -7,7 +7,7 @@ export let language: Language = setLang(prompt("Set language: "));
 function setLang(str: string | null): Language {
     if (str == "spanish") {
         return "spanish";
-    } else return "regular";
+    } else return "huff";
 }
 
 export enum TType {
@@ -72,6 +72,23 @@ if (language == "spanish") {
 
         "Pila": TType.List,
         "Cola": TType.List,
+    }
+}
+
+else if (language == "ht") {
+    KW = {
+        "cook": TType.Let,
+        "bake": TType.Const,
+        "lethimcook": TType.Function,
+        "bill": TType.If,
+        "ryan": TType.Else,
+        "prakhar": TType.While,
+        "george": TType.For,
+        "megacook": TType.Class,
+        "hudson": TType.New,
+
+        "Stack": TType.List,
+        "Queue": TType.List,
     }
 }
 
