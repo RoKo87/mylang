@@ -85,6 +85,16 @@ export const EMap: Record<Language, Record<string, string>> = {
         "parse_exp": ", Esperado: ",
         "parse_rec": "Recibido: ",
     }
+     "ht": {
+        "e_closecbf": "Expected closing curly brace to end function declaration.",
+        "e_opencb": "Expected opening curly bracket.",
+        "e_varname": "Expected variable name in declaration.",
+        "funcname": "Expected function name following function keyword.",
+        "funcparam": "Inside function declaration, expected parameter name.",
+        "parser": "Parser error:",
+        "parse_exp": ", Expecting: ",
+        "parse_rec": "Received: ",
+    }
 }
 
 export function langget(lang: Language, key: string): string {
