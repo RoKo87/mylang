@@ -259,11 +259,12 @@ export default class Parser {
         } 
         else throw "Must declare variable to initialize for loop.";
         this.expect(TType.Comma, "Expected comma that separates statements in for loop initialization.");
-
+        console.log("TKT<AL>G");
         let condition: Expr;
         if (this.peek().type == TType.Name || this.peek().type == TType.Number || this.peek().type == TType.String) {
             condition = this.parseCondExpr();
         } else {
+            console.log("TKT<ATGL>EG");
             throw "Invalid conditional expression."
         }
         this.expect(TType.Comma, "Expected comma that separates statements in for loop initialization.");
