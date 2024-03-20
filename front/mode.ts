@@ -84,7 +84,7 @@ export const EMap: Record<Language, Record<string, string>> = {
         "parser": "Error del analizador:",
         "parse_exp": ", Esperado: ",
         "parse_rec": "Recibido: ",
-    }
+    },
      "ht": {
         "e_closecbf": "Expected closing curly brace to end function declaration.",
         "e_opencb": "Expected opening curly bracket.",
