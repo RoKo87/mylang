@@ -59,7 +59,7 @@ export default class Parser {
             case TType.If: return this.parseCondition();
             case TType.While: return this.parseWLoop();
             case TType.For: return this.parseFLoop();
-            default: return this.parseExpr(true);
+            default: return this.parseExpr();
         }
     }
 
@@ -146,7 +146,7 @@ export default class Parser {
         let decl;
         if (type != undefined) 
             {decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
-        else {decl = {kind: "Declar", identifier, value: this.parseExpr(true), constant: lc} as Declar;}
+        else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
         if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
         return decl;
     }
@@ -244,7 +244,7 @@ export default class Parser {
         if (this.peek().type == TType.Let) {
             assign = this.parseDecl(false);
         } else if (this.peek().type == TType.Number || this.peek().type == TType.Name) {
-            let condition = this.parseExpr(true);
+            let condition = this.parseExpr();
             this.expect(TType.ClosePar, "Expected closing parenthesis that ends for loop initialization.");
             let body: Stmt[] = [];
 
@@ -289,11 +289,11 @@ export default class Parser {
         return {kind: "FLoop", assign, condition, increment, version: "regular", body} as FLoop;
     }
 
-    private parseExpr (semiReq:boolean): Expr {
+    private parseExpr (): Expr {
         console.log("In parseExpr():        ",this.peek());
         if (this.peek().type == TType.New) return this.parseClassObj();
-        else return this.parseAssign(semiReq);
-        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
+        else return this.parseAssign(true);
+        this.expect(TType.Semi, "Statement must end with semicolon");
     }
 
     private parseClassObj(): Expr {
@@ -356,7 +356,7 @@ export default class Parser {
 
             console.log("In parseObject():      ",this.peek());
             this.expect(TType.Colon, "Missing colon following key in object assignment");
-            const value = this.parseExpr(false);
+            const value = this.parseExpr();
 
             props.push({kind: "Property", value, key});
             if (this.peek().type != TType.CloseCB) {
@@ -507,10 +507,10 @@ export default class Parser {
     }
 
     private parseArgList(): Expr[] {
-        const args = [this.parseExpr(false)];
+        const args = [this.parseExpr()];
 
         while (this.not_eof() && this.peek().type == TType.Comma && this.pop()) {
-            args.push(this.parseExpr(false));
+            args.push(this.parseExpr());
         }
 
         return args;
@@ -540,7 +540,7 @@ export default class Parser {
         let index;
         if (this.peek().type == TType.OpenSB) {
             this.pop() //pop [
-            index = this.parseExpr(false);
+            index = this.parseExpr();
             this.expect(TType.CloseSB, "Expected closing square bracket (])");
             return {kind: "Element", list, index} as Element;
         }
@@ -562,7 +562,7 @@ export default class Parser {
                 return {kind: "Number", value: parseFloat(this.pop().value)} as Number;
             case TType.OpenPar:
                 this.pop();
-                const value = this.parseExpr(false);
+                const value = this.parseExpr();
                 this.expect(TType.ClosePar, "Unexpected token found inside parenthesis. Expected closing parenthesis.");
                 return value;
             default:
