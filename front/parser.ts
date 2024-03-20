@@ -147,7 +147,7 @@ export default class Parser {
         if (type != undefined) 
             {decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
         else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
-        this.expect(TType.Semi, "Statement must end with semicolon");
+        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
         return decl;
     }
 
