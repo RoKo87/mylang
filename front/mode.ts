@@ -49,7 +49,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "let": "let", //not used
         "const": "const",
         "contains": "contains",
-        "func": "cook",
+        "func": "lethimcook",
         "true": "tej",
         "false": "allen",
         "index": "index",
