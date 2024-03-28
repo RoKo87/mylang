@@ -429,7 +429,7 @@ export default class Parser {
         while (this.peek().value == "+" || this.peek().value == "-") {
             const operator = this.pop().value;
             const right = this.parseMultExpr();
-            this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Additive Expression]");
+            // this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Additive Expression]");
             left = {
                 kind: "Binary",
                 left,
