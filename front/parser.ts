@@ -264,9 +264,9 @@ export default class Parser {
         if (this.peek().type == TType.Name || this.peek().type == TType.Number || this.peek().type == TType.String) {
             condition = this.parseCondExpr();
         } else {
-            console.log("TKT<ATGL>EG");
             throw "Invalid conditional expression."
         }
+        console.log("TKT<ATGL>EG");
         this.expect(TType.Comma, "Expected comma that separates statements in for loop initialization.");
 
         let increment: Expr;
