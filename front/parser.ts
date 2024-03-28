@@ -270,9 +270,9 @@ export default class Parser {
 
         let increment: Expr;
         if (this.peek().value == (assign as Declar).identifier) {
+            console.log("TKT<AL>GT");
             increment = this.parseAssign(false);
-        } else { console.error("Invalid for loop step statement."); Deno.exit(1)}
-        console.log("TKT<AL>G");
+        } else { console.log("TKT<AL>WG"); console.error("Invalid for loop step statement."); Deno.exit(1)}
         this.expect(TType.ClosePar, "Expected closing parenthesis that ends for loop initialization.");
 
         let body: Stmt[] = [];
