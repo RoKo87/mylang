@@ -147,7 +147,7 @@ export default class Parser {
         if (type != undefined) 
             {decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
         else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
-        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon");
+        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
         return decl;
     }
 
@@ -429,7 +429,7 @@ export default class Parser {
         while (this.peek().value == "+" || this.peek().value == "-") {
             const operator = this.pop().value;
             const right = this.parseMultExpr();
-            this.expect(TType.Semi, "Statement must end with semicolon");
+            this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Additive Expression]");
             left = {
                 kind: "Binary",
                 left,
