@@ -26,7 +26,7 @@ export default class Parser {
         const prev = this.tokens.shift() as Token;
         console.log("In expect():           ",prev);
         if (!prev || prev.type != type) {
-            console.error(langerr(language, "parser") + "\n", err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
+            console.log(langerr(language, "parser") + "\n", err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
             Deno.exit(1);
         }
         return prev;
