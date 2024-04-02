@@ -1,18 +1,10 @@
-lethimcook selectionSort(arr) {
-    cook min = 0;
-    george (cook i = 0, i < arr.length, i = i + 1) {
-        min = i;
-        george (cook j = i + 1, j < arr.length, j = j + 1) {
-            bill (arr[j] < arr[min]) min = j;
-        }
-        bill (i != min) {
-            cook temp = arr[i];
-            arr[i] = arr[min];
-            arr[min] = temp;
-            huff(arr);
-        }
-    }
+shreyas {
+    cook i = 0;
+    cook j = 4;
+    cook k = 3;
+    cook a = k / j;
+    cook b = i / k;
+    cook c = j / i;
+} ohno {
+    print("you suck lol");
 }
-
-cook:[] arre = [63, 32, 88, 56, 43, 42, 6, 49, 14, 19, 55, 68, 9, 64, 1, 4, 2, 51, 93, 86, 5, 74, 79, 36, 60, 73, 44, 26, 6, 31];
-huff(selectionSort(arre));
