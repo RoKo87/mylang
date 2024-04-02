@@ -35,6 +35,8 @@ export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
             result = evaluate(stmt, env);
         }
     }
+
+    return {type: "null", value: null} as NullVal
 }
 
 export function evalFunc(decl: Function, env: Environment): RunVal {
