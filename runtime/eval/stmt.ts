@@ -20,9 +20,22 @@ export function evalDecl(decl: Declar, env: Environment): RunVal {
     return env.declare(decl.identifier, value, decl.constant);
 }
 
-// export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
-//     w
-// }
+export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
+    if (err.what == undefined) {
+        let what : any;
+    } else { let what = err.what; }
+
+    let result: RunVal = INull();
+    try {
+        for (const stmt of err.try_body) {
+            result = evaluate(stmt, env);
+        }
+    } catch (what) {
+        for (const stmt of err.catch_body) {
+            result = evaluate(stmt, env);
+        }
+    }
+}
 
 export function evalFunc(decl: Function, env: Environment): RunVal {
     const func = {type: "custom", name: decl.name,

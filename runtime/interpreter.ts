@@ -61,8 +61,8 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
             return evalWLoop(astNode as WLoop, env);
         case "FLoop": 
             return evalFLoop(astNode as FLoop, env);
-        // case "Error Handler": 
-        //     return evalErrHand(astNode as ErrorHandler, env);
+        case "Error Handler": 
+            return evalErrHand(astNode as ErrorHandler, env);
         default:
             console.error("The interpretation of this node is under construction...", astNode);
             throw "See above"
