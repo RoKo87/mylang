@@ -6,7 +6,7 @@ import {RunVal, NumberVal, StringVal} from "./value.ts";
 import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, ErrorHandler, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Unary, WLoop} from "../front/ast.ts";
 import Environment from "./environment.ts";
 import { evalAssign, evalBinary, evalCall, evalClassObj, evalCompound, evalElement, evalId, evalList, evalLogic, evalMember, evalObject, evalUnary } from "./eval/expr.ts";
-import { evalClass, evalCondStmt, evalDecl, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
+import { evalClass, evalCondStmt, evalDecl, evalErrHand, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
 
 
 
