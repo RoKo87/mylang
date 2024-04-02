@@ -174,7 +174,7 @@ export default class Environment {
         try { env = this.resolve(name); }
         catch (e) { }
         if (env != undefined) {
-            console.log(env);
+            console.log(value);
             throw `Variable ${name} already defined.`
         }
         this.variables.set(name, value);

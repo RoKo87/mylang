@@ -139,9 +139,11 @@ export function evalAssign (node: Assign, env: Environment): RunVal {
         let arrv = (evaluate(name, env) as ListVal);
         if (arrv.class == "array") {
             let arr = arrv.elements;
-            if (((node.to as Element).index as Number).value >= arr.length || ((node.to as Element).index as Number).value >= arr.length) 
+            let index = evaluate((node.to as Element).index, env);
+            let indexrv = (index as NumberVal).value;
+            if (indexrv >= arr.length || ((node.to as Element).index as Number).value >= arr.length) 
                 throw "Out of bounds for an index of this list."
-            arr[((node.to as Element).index as Number).value] = evaluate(node.value, env);
+            arr[indexrv] = evaluate(node.value, env);
             return env.assign(name.symbol, {type: "list", class: arrv.class, elements: arr} as ListVal)
         }
         return INull();
@@ -284,7 +286,6 @@ export function evalCall (call: Call, env: Environment): RunVal {
         for (const stmt of func.body) {
             result = evaluate(stmt, scope);
         }
-        console.log("huh luh?")
         return result;
 
     } 

@@ -24,7 +24,7 @@ export default class Parser {
 
     private expect(type: TType, err: any) {
         const prev = this.tokens.shift() as Token;
-        console.log("In expect():           ",prev);
+        // console.log("In expect():           ",prev);
         if (!prev || prev.type != type) {
             console.log(langerr(language, "parser") + "\n", err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
             Deno.exit(1);
@@ -272,7 +272,7 @@ export default class Parser {
         if (this.peek().value == (assign as Declar).identifier) {
             console.log("TKT<AL>GT");
             increment = this.parseAssign(false);
-        } else { console.log("TKT<AL>WG"); console.error("Invalid for loop step statement."); Deno.exit(1)}
+        } else {console.error("Invalid for loop step statement."); Deno.exit(1)}
         this.expect(TType.ClosePar, "Expected closing parenthesis that ends for loop initialization.");
 
         let body: Stmt[] = [];
@@ -425,8 +425,8 @@ export default class Parser {
 
     private parseAddExpr(): Expr {
         let left = this.parseMultExpr();
-
         while (this.peek().value == "+" || this.peek().value == "-") {
+            console.log("In parseAddExpr():     ",this.peek());
             const operator = this.pop().value;
             const right = this.parseMultExpr();
             // this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Additive Expression]");
@@ -549,7 +549,7 @@ export default class Parser {
     // Assignment, Member, Function, Logical, Comparison, Additive, Mult, Unary, PrimaryExpr
 
     private parsePrimaryExpr(): Expr {
-        console.log("In parsePrimaryExpr(): ",this.peek());
+        //console.log("In parsePrimaryExpr(): ",this.peek());
         const tk = this.peek().type;
 
         switch (tk) {

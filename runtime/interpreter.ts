@@ -14,6 +14,10 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
     if (astNode == undefined) {
         throw `The interpreter encountered an undefined node ${astNode}.`
     }
+
+    // if (astNode.kind == "Element") {
+    //     console.log(astNode);
+    // }
     switch (astNode.kind) {
         case "Number":
             return {value: (astNode as Number).value, type: "number"} as NumberVal;
