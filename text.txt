@@ -2,8 +2,10 @@ shreyas {
     cook i = 0;
     cook j = 4;
     cook k = 3;
+    print("ok this is fire");
     cook a = k / j;
     cook b = i / k;
+    print("and...");
     cook c = j / i;
 } ohno {
     print("you suck lol");
