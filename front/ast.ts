@@ -4,12 +4,14 @@ export type NodeType =
     //STATEMENT
     | "Program" 
     | "Declar"
+    | "FLoop"
     | "Function"
     | "Constructor"
     | "Condition"
+    | "Error Handler"
     | "Logic"
+    | "Throw"
     | "WLoop"
-    | "FLoop"
 
     //VALUES
     | "Class"
@@ -46,6 +48,10 @@ export interface Declar extends Stmt {
     identifier: string,
     value?: Expr;
 }
+export interface Throw extends Stmt {
+    kind: "Throw";
+    err: boolean,
+}
 
 export interface Condition extends Stmt {
     kind: "Condition";
@@ -53,6 +59,13 @@ export interface Condition extends Stmt {
     body: Stmt[];
     else: boolean;
     ebody?: Stmt[];
+}
+
+export interface ErrorHandler extends Stmt {
+    kind: "Error Handler";
+    try_body: Expr[];
+    what?: Expr;
+    catch_body: Expr[];
 }
 
 export interface Logic extends Stmt {

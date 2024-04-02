@@ -34,6 +34,7 @@ export enum TType {
     Function, Constructor,
     If, Else,
     While, For,
+    Try, Throw, Catch,
 
     //Data Structures
     List,
@@ -53,6 +54,9 @@ let KW: Record<string, TType> = {
     "class": TType.Class,
     "constructor": TType.Constructor,
     "new": TType.New,
+    "try": TType.Try,
+    "throw": TType.Throw,
+    "catch": TType.Catch,
 
     "Stack": TType.List,
     "Queue": TType.List,
@@ -69,6 +73,9 @@ if (language == "spanish") {
         "por": TType.For,
         "clase": TType.Class,
         "crea": TType.New,
+        "intenta": TType.Try,
+        "echa": TType.Throw,
+        "agarra": TType.Catch,
 
         "Pila": TType.List,
         "Cola": TType.List,
@@ -86,6 +93,9 @@ else if (language == "ht") {
         "george": TType.For,
         "megacook": TType.Class,
         "hudson": TType.New,
+        "shreyas": TType.Try,
+        "uhoh": TType.Throw,
+        "ohno": TType.Catch,
 
         "Stack": TType.List,
         "Queue": TType.List,

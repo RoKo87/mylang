@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
@@ -59,6 +59,7 @@ export default class Parser {
             case TType.If: return this.parseCondition();
             case TType.While: return this.parseWLoop();
             case TType.For: return this.parseFLoop();
+            case TType.Try: return this.parseErrHand();
             default: return this.parseExpr();
         }
     }
@@ -286,6 +287,38 @@ export default class Parser {
             body.push(this.parseStmt());
         
         return {kind: "FLoop", assign, condition, increment, version: "regular", body} as FLoop;
+    }
+
+    parseErrHand(): Stmt {
+        this.pop() //eat "try"
+
+        let try_body: Stmt[] = [];
+
+        if (this.peek().value == "{") {
+            this.pop();
+            while (this.peek().value != "}") 
+                try_body.push(this.parseStmt());
+            this.pop() // pass }
+        } else 
+            try_body.push(this.parseStmt());
+
+        this.expect(TType.Catch, "A try statement must be matched with a catch statement.") //eat "catch"
+
+        let catch_body: Stmt[] = [];
+
+        let what;
+        if (this.peek().type == TType.OpenPar) {
+            what = this.pop();
+            this.expect(TType.ClosePar, "Expected closing parenthesis.");
+        } else if (this.peek().value == "{") {
+            this.pop();
+            while (this.peek().value != "}") 
+                catch_body.push(this.parseStmt());
+            this.pop() // pass }
+        } else 
+            catch_body.push(this.parseStmt());
+
+        return { kind: "Error Handler", try_body, what, catch_body} as ErrorHandler;
     }
 
     private parseExpr (): Expr {

@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import { BinaryExpr, Class, Condition, Constructor, Declar, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
+import { BinaryExpr, Class, Condition, Constructor, Declar, ErrorHandler, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BoolVal, ClassVal, CtorVal, CustomVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
@@ -19,6 +19,10 @@ export function evalDecl(decl: Declar, env: Environment): RunVal {
     const value = decl.value ? evaluate(decl.value, env) : INull();
     return env.declare(decl.identifier, value, decl.constant);
 }
+
+// export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
+//     w
+// }
 
 export function evalFunc(decl: Function, env: Environment): RunVal {
     const func = {type: "custom", name: decl.name,
