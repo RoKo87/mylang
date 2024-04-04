@@ -325,6 +325,7 @@ export default class Parser {
 
         let what;
         if (this.peek().type == TType.OpenPar) {
+            this.pop();
             what = this.pop();
             this.expect(TType.ClosePar, "Expected closing parenthesis.");
         } else if (this.peek().value == "{") {
