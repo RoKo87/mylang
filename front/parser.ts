@@ -53,7 +53,7 @@ export default class Parser {
         switch (this.peek().type) {
             case TType.Let: 
             case TType.Const: return this.parseDecl(true);
-            case TType.Throw: return this.parseError();
+            case TType.Throw: return this.parseError(true);
             case TType.Class: return this.parseClass();
             case TType.Function: return this.parseFunc();
             case TType.Constructor: return this.parseCtor();
@@ -153,7 +153,7 @@ export default class Parser {
         return decl;
     }
 
-    parseError(): Stmt {
+    parseError(semiReq : boolean): Stmt {
         this.pop(); //eats throw
         let message : string;
         let type : undefined | string;
@@ -165,6 +165,7 @@ export default class Parser {
             message = this.pop().value;
         }
 
+        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Throw Statement]");
         return {kind: "Error", type, message} as Error;
     }
 
