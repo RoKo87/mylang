@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import {IBool, INative, INull, INum, ListVal, NumberVal, RunVal, StringVal} from "./value.ts";
+import {ErrorVal, IBool, INative, INull, INum, ListVal, NumberVal, RunVal, StringVal} from "./value.ts";
 import {Language, langget, LMap} from "../front/mode.ts";
 import {language} from "../front/lexer.ts"
 import { evaluate } from "./interpreter.ts";
@@ -147,6 +147,16 @@ export function gscope() {
             return {type: "list", class: lclass, elements: arr.slice(beginning, end)} as ListVal
         }
         else throw "This function only accepts strings and lists as the object."
+        }), true)
+
+    env.declare(langget(language, "see"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object." ;
+        if (args.length > 0) throw "This function does not accept parameters.";
+        let obj = evaluate(object, env);
+        if ((obj as ErrorVal).message) throw "This function only works with errors caught by a catch statement."
+        let msg = (obj as ErrorVal).message;
+
+        return {type: "string", value: msg} as StringVal
         }), true)
 
     return env;

@@ -3,6 +3,6 @@ shreyas {
     cook j = 4;
     cook k = 3;
     bill (k == 3) uhoh "This ain't it chief";
-} ohno {
-    huff("you suck lol");
+} ohno (x) {
+    huff(x.peekaboo());
 }

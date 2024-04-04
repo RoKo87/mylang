@@ -21,6 +21,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "println": "println",
         "Queue": "Queue",
         "remove": "remove",
+        "see": "see",
         "Stack": "Stack",
         "sub": "sub",
     },
@@ -40,6 +41,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "println": "imprimeln",
         "Queue": "Cola",
         "remove": "quita",
+        "see": "averigua",
         "Stack": "Pila",
         "sub": "sub",
     },
@@ -59,6 +61,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "println": "huffln",
         "Queue": "Queue",
         "remove": "gtfo",
+        "see": "peekaboo",
         "Stack": "Stack",
         "sub": "sub",
     }
