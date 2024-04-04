@@ -4,7 +4,7 @@ import { Stmt } from "../front/ast.ts";
 import Environment from "./environment.ts";
 
 export type ValueType = "null" | "number" | "boolean" | "string" 
-| "object" | "native" | "custom" | "list" | "class" | "constructor" | "class object";
+| "object" | "native" | "custom" | "list" | "class" | "constructor" | "class object" | "error";
 
 export interface RunVal {
     type: ValueType;
@@ -24,6 +24,12 @@ export interface NumberVal extends RunVal {
 export interface StringVal extends RunVal {
     type: "string",
     value: string;
+}
+
+export interface ErrorVal extends RunVal {
+    type: "error",
+    message: string;
+    error_type: string | null;
 }
 
 export interface ClassVal extends RunVal {
@@ -93,6 +99,8 @@ export interface CtorVal extends RunVal {
     envir: Environment;
     body: Stmt[];
 }
+
+
 
 export function ICustom(call: FunCall) {
     return {type: "native", call} as NativeVal;

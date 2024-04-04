@@ -3,7 +3,7 @@
 import { BinaryExpr, Class, Condition, Constructor, Declar, ErrorHandler, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BoolVal, ClassVal, CtorVal, CustomVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
+import { BoolVal, ClassVal, CtorVal, CustomVal, ErrorVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
 import { evalCond } from "./expr.ts";
 
 export function evalProgram (program: Program, env: Environment): RunVal {
@@ -31,6 +31,10 @@ export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
             result = evaluate(stmt, env);
         }
     } catch (what) {
+        if ((what as ErrorVal).message) {
+            let scope = new Environment(env);
+            scope.declare("Error@#{", what, true);
+        }
         for (const stmt of err.catch_body) {
             result = evaluate(stmt, env);
         }

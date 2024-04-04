@@ -16,6 +16,7 @@ export type NodeType =
     //VALUES
     | "Class"
     | "Class Object"
+    | "Error" 
     | "Identifier" 
     | "Number" 
     | "Object"
@@ -145,6 +146,12 @@ export interface Compound extends Expr {
 export interface Identifier extends Expr {
     kind: "Identifier"
     symbol: string;
+}
+
+export interface Error extends Expr {
+    kind: "Error"
+    type?: Identifier;
+    message: string;
 }
 
 export interface Number extends Expr {

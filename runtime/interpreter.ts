@@ -3,9 +3,9 @@
 //may need to import ValueType and INull
 import {RunVal, NumberVal, StringVal} from "./value.ts";
 //may need to import NodeType
-import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, ErrorHandler, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Unary, WLoop} from "../front/ast.ts";
+import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, Error, ErrorHandler, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Unary, WLoop} from "../front/ast.ts";
 import Environment from "./environment.ts";
-import { evalAssign, evalBinary, evalCall, evalClassObj, evalCompound, evalElement, evalId, evalList, evalLogic, evalMember, evalObject, evalUnary } from "./eval/expr.ts";
+import { evalAssign, evalBinary, evalCall, evalClassObj, evalCompound, evalElement, evalError, evalId, evalList, evalLogic, evalMember, evalObject, evalUnary } from "./eval/expr.ts";
 import { evalClass, evalCondStmt, evalDecl, evalErrHand, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
 
 
@@ -29,6 +29,8 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
             return evalMember(astNode as Member, env);
         case "Element":
             return evalElement(astNode as Element, env);
+        case "Error":
+            return evalError(astNode as Error, env);
         case "List":
             return evalList(astNode as List, env);
         case "Binary":

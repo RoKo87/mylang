@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
@@ -53,6 +53,7 @@ export default class Parser {
         switch (this.peek().type) {
             case TType.Let: 
             case TType.Const: return this.parseDecl(true);
+            case TType.Throw: return this.parseError();
             case TType.Class: return this.parseClass();
             case TType.Function: return this.parseFunc();
             case TType.Constructor: return this.parseCtor();
@@ -150,6 +151,21 @@ export default class Parser {
         else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
         if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
         return decl;
+    }
+
+    parseError(): Stmt {
+        this.pop(); //eats throw
+        let message : string;
+        let type : undefined | string;
+        if (this.peek().type == TType.String) {
+            message = this.pop().value;
+        } else {
+            type = this.pop().value;
+            this.expect(TType.Comma, "Expected a comma.");
+            message = this.pop().value;
+        }
+
+        return {kind: "Error", type, message} as Error;
     }
 
     parseClass(): Stmt {

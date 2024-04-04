@@ -1,11 +1,11 @@
 // deno-lint-ignore-file
 
-import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Expr, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
+import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Error, Expr, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
 import { language } from "../../front/lexer.ts";
 import { langget } from "../../front/mode.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BoolVal, ClassObjVal, ClassVal, CustomVal, IBool, INull, INum, ListVal, NativeVal, NumberVal, ObjVal, RunVal, StringVal } from "../value.ts";
+import { BoolVal, ClassObjVal, ClassVal, CustomVal, ErrorVal, IBool, INull, INum, ListVal, NativeVal, NumberVal, ObjVal, RunVal, StringVal } from "../value.ts";
 
 export function evalMath(left: NumberVal, right: NumberVal, op: string): RunVal {
     let res = 0;
@@ -120,6 +120,13 @@ export function evalId (ident: Identifier, env: Environment): RunVal {
     // console.log("In evalId():  ", env)
     const val = env.lookup(ident.symbol);
     return val;
+}
+
+export function evalError (err: Error, env: Environment): RunVal {
+    // console.log("In evalId():  ", env)
+    const message = err.message;
+    const error_type = err.type ? err.type : null;
+    throw {type: "error", error_type, message} as ErrorVal;
 }
 
 export function evalAssign (node: Assign, env: Environment): RunVal {

@@ -2,11 +2,7 @@ shreyas {
     cook i = 0;
     cook j = 4;
     cook k = 3;
-    huff("ok this is fire");
-    cook a = k / j;
-    cook b = i / k;
-    huff("and...");
-    cook c = j / i;
+    bill (k == 3) uhoh "This ain't it chief";
 } ohno {
     huff("you suck lol");
 }
