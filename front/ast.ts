@@ -150,7 +150,7 @@ export interface Identifier extends Expr {
 
 export interface Error extends Expr {
     kind: "Error"
-    type?: Identifier;
+    type?: Identifier | string;
     message: string;
 }
 

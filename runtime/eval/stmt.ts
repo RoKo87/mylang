@@ -1,6 +1,7 @@
 // deno-lint-ignore-file
 
-import { BinaryExpr, Class, Condition, Constructor, Declar, ErrorHandler, FLoop, Function, Program, Stmt, WLoop } from "../../front/ast.ts";
+import { BinaryExpr, Class, Condition, Constructor, Declar, ErrorHandler, FLoop, Function, Identifier, Program, Stmt, WLoop } from "../../front/ast.ts";
+import { TType } from "../../front/lexer.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BoolVal, ClassVal, CtorVal, CustomVal, ErrorVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
@@ -33,7 +34,11 @@ export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
     } catch (what) {
         if ((what as ErrorVal).message) {
             let scope = new Environment(env);
+            if (err.what == undefined) {
             scope.declare("Error@#{", what, true);
+            } else {
+                env.declare((err.what as Identifier).symbol, what, true);
+            }
         }
         for (const stmt of err.catch_body) {
             result = evaluate(stmt, env);

@@ -2,7 +2,8 @@ shreyas {
     cook i = 0;
     cook j = 4;
     cook k = 3;
-    bill (k == 3) uhoh "This ain't it chief";
+    bill (k == 2) uhoh "This ain't it chief";
+    bill (k == 3) uhoh "This really ain't it chief";
 } ohno (x) {
     huff(x.peekaboo());
 }

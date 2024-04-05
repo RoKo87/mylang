@@ -153,7 +153,7 @@ export function gscope() {
         if (object == undefined) throw "This member function does not have an object." ;
         if (args.length > 0) throw "This function does not accept parameters.";
         let obj = evaluate(object, env);
-        if ((obj as ErrorVal).message) throw "This function only works with errors caught by a catch statement."
+        if ((obj as ErrorVal).message == undefined) throw "This function only works with errors caught by a catch statement."
         let msg = (obj as ErrorVal).message;
 
         return {type: "string", value: msg} as StringVal
@@ -161,8 +161,6 @@ export function gscope() {
 
     return env;
 }
-
-
 
 export default class Environment {
 
@@ -177,7 +175,6 @@ export default class Environment {
         this.constants = new Set();
 
     }
-
 
     public declare (name: string, value: RunVal, lc: boolean): RunVal {
         let env: Environment | undefined = undefined;
@@ -219,7 +216,8 @@ export default class Environment {
         } else if (this.parent != undefined) {
             return this.parent.resolve(name);
         } else if (this.parent == undefined) {
-            throw `Variable "${name}" doesn't exist`
+            // console.log(this.variables);
+            throw `Variable "${name}" does not exist`
         } else throw `An unspecified runtime error occured.`
     }
 }

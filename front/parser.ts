@@ -24,7 +24,7 @@ export default class Parser {
 
     private expect(type: TType, err: any) {
         const prev = this.tokens.shift() as Token;
-        // console.log("In expect():           ",prev);
+        //console.log("In expect():           ",prev); //optional log
         if (!prev || prev.type != type) {
             console.log(langerr(language, "parser") + "\n", err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
             Deno.exit(1);
@@ -49,6 +49,7 @@ export default class Parser {
 
     private parseStmt (): Stmt {
         // skip to parse_expr
+        //console.log("In parseStmt():        ",this.peek()); //optional log
         let t = this.peek().type;
         switch (this.peek().type) {
             case TType.Let: 
@@ -199,7 +200,7 @@ export default class Parser {
         else {
             throw "Invalid conditional expression for if-statement."
         }
-        console.log("In parseCondition():    ", this.peek());
+        console.log("In parseCondition():   ", this.peek());
         this.expect(TType.ClosePar, "Expected closing parenthesis that ends condition.");
 
         let body: Stmt[] = [];
@@ -326,9 +327,10 @@ export default class Parser {
         let what;
         if (this.peek().type == TType.OpenPar) {
             this.pop();
-            what = this.pop();
+            what = {kind: "Identifier", symbol: this.pop().value } as Identifier;
             this.expect(TType.ClosePar, "Expected closing parenthesis.");
-        } else if (this.peek().value == "{") {
+        } 
+        if (this.peek().value == "{") {
             this.pop();
             while (this.peek().value != "}") 
                 catch_body.push(this.parseStmt());
@@ -534,6 +536,7 @@ export default class Parser {
 
     private parseCall(name: Expr): Expr {
         let call: Expr = { kind: "Call", name, args: this.parseArgs(true), } as Call;
+        console.log("In parseCall():   ", this.peek()); //optional log
         if (this.peek().type == TType.OpenPar) {
             call = this.parseCall(call);
         }
@@ -600,7 +603,7 @@ export default class Parser {
     // Assignment, Member, Function, Logical, Comparison, Additive, Mult, Unary, PrimaryExpr
 
     private parsePrimaryExpr(): Expr {
-        //console.log("In parsePrimaryExpr(): ",this.peek());
+        //console.log("In parsePrimaryExpr(): ",this.peek()); //optional log
         const tk = this.peek().type;
 
         switch (tk) {
