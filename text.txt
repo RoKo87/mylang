@@ -1,9 +1,10 @@
-shreyas {
-    cook i = 0;
-    cook j = 4;
-    cook k = 3;
-    bill (k == 2) uhoh "This ain't it chief";
-    bill (k == 3) uhoh "This really ain't it chief";
-} ohno (x) {
-    huff(x.peekaboo());
-}
+cook:Set hewo = [1, 2, 3, 2, 1, 4, 5];
+huff(hewo);
+hewo.add(6);
+huff(hewo);
+hewo.add(5);
+huff(hewo);
+hewo.add(7, 2);
+huff(hewo);
+hewo.add(6, 3);
+huff(hewo);

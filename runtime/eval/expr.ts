@@ -256,11 +256,22 @@ export function evalElement (elem: Element, env: Environment): RunVal {
 }
 
 export function evalList (list: List, env: Environment): RunVal {
-    let elements = new Array<RunVal>;
-    
-    for (const elem of list.elements) {
+    let elements = new Array<RunVal>;;
+    if (list.type == "Set") {
+        for (const elem of list.elements) {
+            elements.push(evaluate(elem, env));
+            let index = 0;
+            for (const pushed of elements) {
+                if (pushed.value == evaluate(elem, env).value && index != elements.length - 1) {
+                    elements.pop();
+                    break;
+                } else index++;
+            }
+        }
+    } else for (const elem of list.elements) {
         elements.push(evaluate(elem, env));
     }
+
     const res = {type: "list", class: list.type, elements} as ListVal;
     return res;
 }

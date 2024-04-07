@@ -23,6 +23,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "remove": "remove",
         "see": "see",
         "Stack": "Stack",
+        "Set": "Set",
         "sub": "sub",
     },
     "spanish": {
@@ -43,6 +44,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "remove": "quita",
         "see": "averigua",
         "Stack": "Pila",
+        "Set": "Conjunto",
         "sub": "sub",
     },
     "ht": {
@@ -63,6 +65,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "remove": "gtfo",
         "see": "peekaboo",
         "Stack": "Stack",
+        "Set": "Set",
         "sub": "sub",
     }
 }
@@ -74,7 +77,6 @@ export const EMap: Record<Language, Record<string, string>> = {
         "e_varname": "Expected variable name in declaration.",
         "funcname": "Expected function name following function keyword.",
         "funcparam": "Inside function declaration, expected parameter name.",
-        "parser": "Parser error:",
         "parse_exp": ", Expecting: ",
         "parse_rec": "Received: ",
     },
@@ -84,7 +86,6 @@ export const EMap: Record<Language, Record<string, string>> = {
         "e_varname": "Esperando el nombre de una variable.",
         "funcname": "Esperando el nombre de la función después de la palabra clave 'func'.",
         "funcparam": "Esperando el nombre de parámetro dentro de la declaración de la función",
-        "parser": "Error del analizador:",
         "parse_exp": ", Esperado: ",
         "parse_rec": "Recibido: ",
     },
@@ -94,7 +95,6 @@ export const EMap: Record<Language, Record<string, string>> = {
         "e_varname": "Expected variable name in declaration.",
         "funcname": "Expected function name following function keyword.",
         "funcparam": "Inside function declaration, expected parameter name.",
-        "parser": "Parser error:",
         "parse_exp": ", Expecting: ",
         "parse_rec": "Received: ",
     }

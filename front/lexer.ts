@@ -60,6 +60,7 @@ let KW: Record<string, TType> = {
 
     "Stack": TType.List,
     "Queue": TType.List,
+    "Set": TType.List
 }
 
 if (language == "spanish") {
@@ -79,6 +80,7 @@ if (language == "spanish") {
 
         "Pila": TType.List,
         "Cola": TType.List,
+        "Conjunto": TType.List,
     }
 }
 
@@ -99,6 +101,7 @@ else if (language == "ht") {
 
         "Stack": TType.List,
         "Queue": TType.List,
+        "Set": TType.List,
     }
 }
 

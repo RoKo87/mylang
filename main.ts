@@ -4,12 +4,17 @@ import Environment, { gscope } from "./runtime/environment.ts";
 import {evaluate} from "./runtime/interpreter.ts";
 import * as fs from 'node:fs';
 
+export const showParsing = false;
+const showSyntax = false;
+const showEval = false;
+
 repl();
 //may need to be async
 function repl () {
     const parser = new Parser();
     const env : Environment = gscope();
-    console.log("\nglombus is coming.");
+
+    console.log("\n");
     try {
         // const input = prompt(" ");
         const input = fs.readFileSync("./text.txt", "utf-8");
@@ -19,17 +24,16 @@ function repl () {
         console.log("\nPARSING:")
         if (input) {
             const program = parser.produceAST(input);
-            console.log("\nSYNTAX TREE:")
-            console.log(program);
+            if (showSyntax) { console.log("\nSYNTAX TREE:"); console.log(program); }
 
             console.log("\nOUTPUT:")
             const result = evaluate(program, env);
 
             console.log("\nEVALUATION:")
-            console.log(result);
+            if (showEval) console.log(result);
+            else console.log("Code ran successfully. :D");
             // console.log(result.value);
             console.log("\n\n");
         }
-    }
-    catch (e) { console.log("Main file error: ", e) }
+    } catch (e) { console.log("Main file error: ", e) }
 }

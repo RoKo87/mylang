@@ -1,5 +1,6 @@
 // deno-lint-ignore-file
 
+import { showParsing } from "../main.ts";
 import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
@@ -24,9 +25,11 @@ export default class Parser {
 
     private expect(type: TType, err: any) {
         const prev = this.tokens.shift() as Token;
-        //console.log("In expect():           ",prev); //optional log
+        if (showParsing) console.log("In expect():           ",prev); //optional log
         if (!prev || prev.type != type) {
-            console.log(langerr(language, "parser") + "\n", err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
+            console.log("Syntax error :(")
+            console.log(err, langerr(language, "parse_rec"), prev, langerr(language, "parse_exp"), type + "\n");
+            console.log();
             Deno.exit(1);
         }
         return prev;
@@ -39,17 +42,20 @@ export default class Parser {
             body: [],
         };
         
+        try {
         while (this.not_eof()) {
-            console.log("In produceAST():       ",this.peek());
+            if (showParsing) console.log("In produceAST():       ",this.peek());
             program.body.push(this.parseStmt());
         }
+        } catch (e) { console.log("Syntax Error: ");}
 
+        if (!showParsing) console.log("Code parsed successfully. :)")
         return program;
     }
 
     private parseStmt (): Stmt {
         // skip to parse_expr
-        //console.log("In parseStmt():        ",this.peek()); //optional log
+        if (showParsing) console.log("In parseStmt():        ",this.peek()); //optional log
         let t = this.peek().type;
         switch (this.peek().type) {
             case TType.Let: 
@@ -183,7 +189,7 @@ export default class Parser {
             if (dec.kind == "Declar") fields.push(dec as Declar);
             else if (dec.kind == "Function") methods.push(dec as Function);
             else if (dec.kind == "Constructor") ctors.push(dec as Constructor);
-            // console.log("In parseClass():       ",this.peek());
+            if (showParsing) console.log("In parseClass():       ",this.peek());
         }
         this.expect(TType.CloseCB, "Expected closing culry brace (})"); //pop }
         return {kind: "Class", name, fields, ctors, methods} as Class;
@@ -200,7 +206,7 @@ export default class Parser {
         else {
             throw "Invalid conditional expression for if-statement."
         }
-        console.log("In parseCondition():   ", this.peek());
+        if (showParsing) console.log("In parseCondition():   ", this.peek());
         this.expect(TType.ClosePar, "Expected closing parenthesis that ends condition.");
 
         let body: Stmt[] = [];
@@ -342,7 +348,7 @@ export default class Parser {
     }
 
     private parseExpr (): Expr {
-        console.log("In parseExpr():        ",this.peek());
+        if (showParsing) console.log("In parseExpr():        ",this.peek());
         if (this.peek().type == TType.New) return this.parseClassObj();
         else return this.parseAssign(true);
         this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Expression]");
@@ -406,7 +412,7 @@ export default class Parser {
                 continue;
             }
 
-            console.log("In parseObject():      ",this.peek());
+            if (showParsing) console.log("In parseObject():      ",this.peek());
             this.expect(TType.Colon, "Missing colon following key in object assignment");
             const value = this.parseExpr();
 
@@ -479,7 +485,7 @@ export default class Parser {
     private parseAddExpr(): Expr {
         let left = this.parseMultExpr();
         while (this.peek().value == "+" || this.peek().value == "-") {
-            console.log("In parseAddExpr():     ",this.peek());
+            if (showParsing) console.log("In parseAddExpr():     ",this.peek());
             const operator = this.pop().value;
             const right = this.parseMultExpr();
             // this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Additive Expression]");
@@ -536,7 +542,7 @@ export default class Parser {
 
     private parseCall(name: Expr): Expr {
         let call: Expr = { kind: "Call", name, args: this.parseArgs(true), } as Call;
-        console.log("In parseCall():   ", this.peek()); //optional log
+        if (showParsing) console.log("In parseCall():        ", this.peek()); //optional log
         if (this.peek().type == TType.OpenPar) {
             call = this.parseCall(call);
         }
@@ -603,7 +609,7 @@ export default class Parser {
     // Assignment, Member, Function, Logical, Comparison, Additive, Mult, Unary, PrimaryExpr
 
     private parsePrimaryExpr(): Expr {
-        //console.log("In parsePrimaryExpr(): ",this.peek()); //optional log
+        if (showParsing) console.log("In parsePrimaryExpr(): ",this.peek()); //optional log
         const tk = this.peek().type;
 
         switch (tk) {
@@ -619,7 +625,7 @@ export default class Parser {
                 this.expect(TType.ClosePar, "Unexpected token found inside parenthesis. Expected closing parenthesis.");
                 return value;
             default:
-                console.error("Unexpected toxen found during parsing: ", this.peek());
+                console.error("Syntax error :( \nUnexpected toxen found during parsing: ", this.peek(), "\n");
                 //Trick the compiler for TS
                 Deno.exit(1);
 

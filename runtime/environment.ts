@@ -59,11 +59,21 @@ export function gscope() {
         } else {
             let arr = (evaluate(object, env) as ListVal).elements; let addend = args[0];
             let position = (args[1])? (args[1] as NumberVal): undefined; let type = (evaluate(object, env) as ListVal).class;
-            // console.log(type);
             if (args[1] != undefined && (type == langget(language, "Stack") || type ==  langget(language, "Queue")))
                 throw `The arguments provided are not compatible with this data structure.`
-            if (position == undefined || position.value == arr.length) { arr.push(addend);}
-            else arr.splice(position.value, 0, addend);
+
+            if (type == langget(language, "Set")) {
+                if (position == undefined) position = {type: "number", value: arr.length} as NumberVal;
+                arr.splice(position.value, 0, addend);
+                let index = 0;
+                for (const pushed of arr) {
+                    if (pushed.value == addend.value && index != position.value) {
+                        arr.pop();
+                        break;
+                    } else index++;
+                }
+            } else if (position != undefined) arr.splice(position.value, 0, addend);
+            else arr.push(addend);
             nlist = {type: "list", class: (evaluate(object, env) as ListVal).class, elements: arr} as ListVal;
             env.assign((object as Identifier).symbol, nlist)  
         } return INull(); }), true)
