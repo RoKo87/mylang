@@ -12,7 +12,7 @@ This is my programming language (I don't have a name for it yet).
 ## What can you do?
 * Declare and assign variables and constants
 * Use conditional statements, while and for loops
-* Use arrays, queues, and stacks
+* Use arrays, queues, and stacks, sets
 * Make and call a custom function
 * Use arithmetic and logical operators
 * Throw and catch errors
