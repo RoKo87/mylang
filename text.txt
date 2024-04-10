@@ -1,10 +1,8 @@
-cook:Set hewo = [1, 2, 3, 2, 1, 4, 5];
-huff(hewo);
-hewo.add(6);
-huff(hewo);
-hewo.add(5);
-huff(hewo);
-hewo.add(7, 2);
-huff(hewo);
-hewo.add(6, 3);
-huff(hewo);
+cook val = 6;
+
+player (val) {
+    bish 2: huff("this is 2");
+    bish 6: huff("this is 6");
+    bish mid: huff("this is mid...");
+}
+
