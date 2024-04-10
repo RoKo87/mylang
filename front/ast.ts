@@ -8,6 +8,8 @@ export type NodeType =
     | "Function"
     | "Constructor"
     | "Condition"
+    | "Switcher"
+    | "Case"
     | "Error Handler"
     | "Logic"
     | "Throw"
@@ -60,6 +62,19 @@ export interface Condition extends Stmt {
     body: Stmt[];
     else: boolean;
     ebody?: Stmt[];
+}
+
+export interface Switcher extends Stmt {
+    kind: "Switcher";
+    value: Expr;
+    cases: Case[];
+}
+
+export interface Case extends Stmt {
+    kind: "Case";
+    value: Expr;
+    def: boolean;
+    body: Stmt[];
 }
 
 export interface ErrorHandler extends Stmt {

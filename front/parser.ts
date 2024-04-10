@@ -1,7 +1,7 @@
 // deno-lint-ignore-file
 
 import { showParsing } from "../main.ts";
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error, Case, Switcher} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
@@ -68,6 +68,7 @@ export default class Parser {
             case TType.While: return this.parseWLoop();
             case TType.For: return this.parseFLoop();
             case TType.Try: return this.parseErrHand();
+            case TType.Switch: return this.parseSwitcher();
             default: return this.parseExpr();
         }
     }
@@ -345,6 +346,44 @@ export default class Parser {
             catch_body.push(this.parseStmt());
 
         return { kind: "Error Handler", try_body, what, catch_body} as ErrorHandler;
+    }
+
+    parseSwitcher(): Stmt {
+        this.pop() //eat "switch"
+
+        this.expect(TType.OpenPar, "Expected opening parenthesis");
+        let value = this.parseExpr();
+        this.expect(TType.ClosePar, "Expected closing parenthesis");
+
+        this.expect(TType.OpenCB, "Expected opening curly bracket.");
+        let finished = false;
+        let cases = new Array<Case>
+        while (!finished) {
+            this.expect(TType.Case, "Expected keyword 'case'.");
+            cases.push(this.parseCase());
+        }
+        this.expect(TType.CloseCB, "Expected closing curly bracket.");
+
+        return { kind: "Switcher", value, cases} as Switcher;
+    }
+
+    private parseCase(): Case {
+        let name = this.peek();
+        let value = this.parseExpr();
+        let def = (name.type == TType.Default);
+        this.expect(TType.Colon, "Expected a colon.");
+
+        let body: Stmt[] = [];
+
+        if (this.peek().value == "{") {
+            this.pop();
+            while (this.peek().value != "}") 
+                body.push(this.parseStmt());
+            this.pop() // pass }
+        } else 
+            body.push(this.parseStmt());
+
+        return {kind: "Case", value, def, body} as Case;
     }
 
     private parseExpr (): Expr {

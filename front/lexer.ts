@@ -32,7 +32,7 @@ export enum TType {
     //Keywords
     Const, Let, Class, New,
     Function, Constructor,
-    If, Else,
+    If, Else, Switch, Case, Default,
     While, For,
     Try, Throw, Catch,
 
@@ -57,6 +57,9 @@ let KW: Record<string, TType> = {
     "try": TType.Try,
     "throw": TType.Throw,
     "catch": TType.Catch,
+    "switch": TType.Switch,
+    "case": TType.Case,
+    "default": TType.Default,
 
     "Stack": TType.List,
     "Queue": TType.List,
@@ -77,6 +80,9 @@ if (language == "spanish") {
         "intenta": TType.Try,
         "echa": TType.Throw,
         "agarra": TType.Catch,
+        "cambia": TType.Switch,
+        "caso": TType.Case,
+        "predet": TType.Default,
 
         "Pila": TType.List,
         "Cola": TType.List,
@@ -90,7 +96,7 @@ else if (language == "ht") {
         "bake": TType.Const,
         "lethimcook": TType.Function,
         "bill": TType.If,
-        "ryan": TType.Else,
+        "opp": TType.Else,
         "prakhar": TType.While,
         "george": TType.For,
         "megacook": TType.Class,
@@ -98,6 +104,9 @@ else if (language == "ht") {
         "shreyas": TType.Try,
         "uhoh": TType.Throw,
         "ohno": TType.Catch,
+        "player": TType.Switch,
+        "bish": TType.Case,
+        "mid": TType.Default,
 
         "Stack": TType.List,
         "Queue": TType.List,
@@ -228,7 +237,7 @@ export function tokenize (source:string): Token[] {
                 tokens.push(addToken(num, TType.Number));
             } else if (isAlpha(src[0])) {
                 let ident = ""; //foo or let
-                while (src.length > 0 && isAlpha(src[0])) {
+                while (src.length > 0 && (isAlpha(src[0]) || isInt(src[0]))) {
                     ident += src.shift();
                 }
 
