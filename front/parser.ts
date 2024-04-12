@@ -370,10 +370,13 @@ export default class Parser {
     private parseCase(): Case {
         let name = this.peek();
         let value;
+        let def = false;
         if (this.peek().type != TType.Default) {
             value = this.parseExpr();
+        } else { 
+            this.pop();
+            def = false;
         }
-        let def = (name.type == TType.Default);
         this.expect(TType.Colon, "Expected a colon.");
 
         let body: Stmt[] = [];
