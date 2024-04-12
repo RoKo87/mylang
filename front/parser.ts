@@ -369,7 +369,10 @@ export default class Parser {
 
     private parseCase(): Case {
         let name = this.peek();
-        let value = this.parseExpr();
+        let value;
+        if (this.peek().type != TType.Default) {
+            value = this.parseExpr();
+        }
         let def = (name.type == TType.Default);
         this.expect(TType.Colon, "Expected a colon.");
 

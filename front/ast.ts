@@ -72,7 +72,7 @@ export interface Switcher extends Stmt {
 
 export interface Case extends Stmt {
     kind: "Case";
-    value: Expr;
+    value?: Expr;
     def: boolean;
     body: Stmt[];
 }
