@@ -361,6 +361,7 @@ export default class Parser {
         while (!finished) {
             this.expect(TType.Case, "Expected keyword 'case'.");
             cases.push(this.parseCase());
+            if (this.peek().type == TType.CloseCB) finished = true;
         }
         this.expect(TType.CloseCB, "Expected closing curly bracket.");
 
