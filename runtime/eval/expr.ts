@@ -265,7 +265,7 @@ export function evalSwitcher (swit: Switcher, env: Environment): RunVal {
             for (const stmt of cse.body) {
                 result = evaluate(stmt, scope);
             }
-        }
+        } else { console.log(evaluate(cval, env), "is not ", val) }
     }
 
     return INull();
