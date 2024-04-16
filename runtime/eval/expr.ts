@@ -259,7 +259,7 @@ export function evalSwitcher (swit: Switcher, env: Environment): RunVal {
     let val = evaluate(swit.value, env);
     for (const cse of swit.cases) {
         let cval = cse.value ? cse.value : {kind: "String"} as Stmt;
-        if (evaluate(cval, env) == val || cse.def) {
+        if (evaluate(cval, env).value == val.value || cse.def) {
             let result : RunVal = INull();
             let scope = new Environment(env);
             for (const stmt of cse.body) {
