@@ -479,6 +479,9 @@ export default class Parser {
         }
         
         this.pop(); //pop [
+        if (this.peek().type != TType.OpenCB) {
+            return this.parseList("array");
+        } 
         const elements = new Array<Expr>();
 
         while (this.not_eof() && this.peek().type != TType.CloseSB) {

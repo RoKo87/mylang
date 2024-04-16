@@ -1,8 +1,1 @@
-cook val = 6;
-
-player (val) {
-    bish 2: huff("this is 2");
-    bish 6: huff("this is 6");
-    bish mid: huff("this is mid...");
-}
-
+cook:[] = [[1, 2, 3], [4, 5, 6]];
