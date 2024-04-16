@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Error, Expr, Identifier, List, Logic, Member, Number, Object, Strit, Unary } from "../../front/ast.ts";
+import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Error, Expr, Identifier, List, Logic, Member, Number, Object, Strit, Switcher, Unary } from "../../front/ast.ts";
 import { language } from "../../front/lexer.ts";
 import { langget } from "../../front/mode.ts";
 import Environment from "../environment.ts";
@@ -253,6 +253,20 @@ export function evalElement (elem: Element, env: Environment): RunVal {
     // let length = list.valu
 
     return INull();
+}
+
+export function evalSwitcher (swit: Switcher, env: Environment): RunVal {
+    let val = evaluate(swit.value, env);
+    for (const cse of swit.cases) {
+        let cval = cse.value ? cse.value : {kind: "Identifier", symbol: "null"} as Identifier;
+        if (evaluate(cval, env) == val || cse.def) {
+            let result : RunVal = INull();
+            let scope = new Environment(env);
+            for (const stmt of cse.body) {
+                result = evaluate(stmt, scope);
+            }
+        }
+    }
 }
 
 export function evalList (list: List, env: Environment): RunVal {

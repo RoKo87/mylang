@@ -376,7 +376,7 @@ export default class Parser {
             value = this.parseExpr();
         } else { 
             this.pop();
-            def = false;
+            def = true;
         }
         this.expect(TType.Colon, "Expected a colon.");
 
