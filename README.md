@@ -16,3 +16,4 @@ This is my programming language (I don't have a name for it yet).
 * Make and call a custom function
 * Use arithmetic and logical operators
 * Throw and catch errors
+* Use switch statements
