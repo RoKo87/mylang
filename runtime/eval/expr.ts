@@ -267,6 +267,8 @@ export function evalSwitcher (swit: Switcher, env: Environment): RunVal {
             }
         }
     }
+    
+    return INull();
 }
 
 export function evalList (list: List, env: Environment): RunVal {
