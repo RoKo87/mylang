@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 
-import {ErrorVal, IBool, INative, INull, INum, ListVal, NumberVal, RunVal, StringVal} from "./value.ts";
+import {ErrorVal, IBool, INative, INull, INum, ListVal, NumberVal, ObjVal, RunVal, StringVal} from "./value.ts";
 import {Language, langget, LMap} from "../front/mode.ts";
 import {language} from "../front/lexer.ts"
 import { evaluate } from "./interpreter.ts";
@@ -15,6 +15,23 @@ export function gscope() {
     env.declare(langget(language, "true"), IBool(true), true);
     env.declare(langget(language, "false"), IBool(false), true);
     env.declare(langget(language, "null"), INull(), true);
+
+    //Math "method class"
+
+    env.declare(langget(language, "sqrt"), INative((args, scope, object) => {
+        if (args.length != 1) throw "This function must have 1 argument.";
+        if ((object as Identifier).symbol != langget(language, "Math")) throw "Did you mean 'Math.sqrt()' ?";
+        if (args[0].type != "number") throw "This function must be input a number."
+        return {type: "number", value: Math.sqrt(args[0].value)} as RunVal;
+    }), true)
+
+    env.declare(langget(language, "Math"), 
+        {type: "object", props:
+            new Map<string, RunVal>([
+                [langget(language, "sqrt"), env.getValue(langget(language, "sqrt"))],
+            ])} as ObjVal, 
+        true);
+
     const parser = new Parser();
 
     //native functions
@@ -169,6 +186,41 @@ export function gscope() {
         return {type: "string", value: msg} as StringVal
         }), true)
 
+    env.declare(langget(language, "matches"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object." ;
+        if (args.length != 1) throw "This function must receive 1 parameter.";
+        if (evaluate(object, env).type != "string") throw "This function only works on a string";
+        let tested = evaluate(object, env).value;
+        let strval = args[0];
+        let str = strval.value;
+        if (str.substring(0, 2) != "\\r") throw "The parameter for the matches() function must be a regular expression.";
+        str = str.substring(2);
+        if (str.substring(0, 1) == " ") str.substring(1);
+
+        let testarr = [...tested];
+        let strarr = [...str];
+        let check = true; 
+
+        while (check && testarr.length > 0) {
+            //main check
+            if (testarr[0] == strarr[0]) {
+                if (strarr[1] == "#") {
+                    let quantity = strarr[2];
+                    let modif; let atmost;
+                    if (quantity != ">") {
+                        if (strarr[3] == "<" || strarr[3] == ">") modif = strarr[3];
+                        else if (strarr[3] = "-") {
+                            modif = strarr[3];
+                            atmost = strarr[4];
+                        }
+                    }
+                }
+            } else {check = false;}
+        }
+
+        return IBool(check);
+        }), true)
+
     return env;
 }
 
@@ -202,6 +254,13 @@ export default class Environment {
         return value;
     }
 
+    public getValue (name: string): RunVal {
+        for (const k of this.variables) {
+            if (k[0] == name) return k[1];
+        }
+        return INull();
+    }
+
     public assign (name: string, value: RunVal): RunVal {
         const env = this.resolve(name);
         if (env.constants.has(name)) {
@@ -227,7 +286,12 @@ export default class Environment {
             return this.parent.resolve(name);
         } else if (this.parent == undefined) {
             // console.log(this.variables);
-            throw `Variable "${name}" does not exist`
+            if (language == "spanish") {
+                throw `La variable "${name}" no existe.`;
+            }
+            else {
+                throw `Variable "${name}" does not exist`;
+            }
         } else throw `An unspecified runtime error occured.`
     }
 }

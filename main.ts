@@ -1,4 +1,6 @@
 
+import { language } from "./front/lexer.ts";
+import { langerr, langget } from "./front/mode.ts";
 import Parser from "./front/parser.ts";
 import Environment, { gscope } from "./runtime/environment.ts";
 import {evaluate} from "./runtime/interpreter.ts";
@@ -21,19 +23,19 @@ function repl () {
         if (!input || input.includes("exit")) {
             Deno.exit(1);
         }
-        console.log("\nPARSING:")
+        console.log("\n" + langget(language, "PARSING") + ":");
         if (input) {
             const program = parser.produceAST(input);
             if (showSyntax) { console.log("\nSYNTAX TREE:"); console.log(program); }
 
-            console.log("\nOUTPUT:")
+            console.log("\n" + langget(language, "OUTPUT") + ":");
             const result = evaluate(program, env);
 
-            console.log("\nEVALUATION:")
+            console.log("\n" + langget(language, "EVALUATION") + ":")
             if (showEval) console.log(result);
-            else console.log("Code ran successfully. :D");
+            else console.log(langerr(language, "a_runsuccess"));
             // console.log(result.value);
             console.log("\n\n");
         }
-    } catch (e) { console.log("Main file error: ", e) }
+    } catch (e) { console.log("ERROR: ", e) }
 }

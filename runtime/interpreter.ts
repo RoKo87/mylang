@@ -3,10 +3,10 @@
 //may need to import ValueType and INull
 import {RunVal, NumberVal, StringVal} from "./value.ts";
 //may need to import NodeType
-import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, Error, ErrorHandler, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Stmt, Strit, Switcher, Unary, WLoop} from "../front/ast.ts";
+import {Assign, BinaryExpr, Call, Class, ClassObj, Compound, Condition, Declar, Element, Error, ErrorHandler, FLoop, Function, Identifier, List, Logic, Member, Number, Object, Program, Return, Stmt, Strit, Switcher, Unary, WLoop} from "../front/ast.ts";
 import Environment from "./environment.ts";
 import { evalAssign, evalBinary, evalCall, evalClassObj, evalCompound, evalElement, evalError, evalId, evalList, evalLogic, evalMember, evalObject, evalSwitcher, evalUnary } from "./eval/expr.ts";
-import { evalClass, evalCondStmt, evalDecl, evalErrHand, evalFLoop, evalFunc, evalProgram, evalWLoop } from "./eval/stmt.ts";
+import { evalClass, evalCondStmt, evalDecl, evalErrHand, evalFLoop, evalFunc, evalProgram, evalReturn, evalWLoop } from "./eval/stmt.ts";
 
 
 
@@ -67,6 +67,8 @@ export function evaluate (astNode: Stmt, env: Environment): RunVal {
             return evalErrHand(astNode as ErrorHandler, env);
         case "Switcher": 
             return evalSwitcher(astNode as Switcher, env);
+        case "Return": 
+            return evalReturn(astNode as Return, env);
         default:
             console.error("The interpretation of this node is under construction...", astNode);
             throw "See above"

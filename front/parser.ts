@@ -1,7 +1,7 @@
 // deno-lint-ignore-file
 
 import { showParsing } from "../main.ts";
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error, Case, Switcher} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error, Case, Switcher, isExpr, canSkipSemi, Regex, Return} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
@@ -47,9 +47,9 @@ export default class Parser {
             if (showParsing) console.log("In produceAST():       ",this.peek());
             program.body.push(this.parseStmt());
         }
-        } catch (e) { console.log("Syntax Error: ");}
+        } catch (e) { console.log("Syntax Error: ", e);}
 
-        if (!showParsing) console.log("Code parsed successfully. :)")
+        if (!showParsing) console.log(langerr(language, "a_parsesuccess"))
         return program;
     }
 
@@ -69,6 +69,7 @@ export default class Parser {
             case TType.For: return this.parseFLoop();
             case TType.Try: return this.parseErrHand();
             case TType.Switch: return this.parseSwitcher();
+            case TType.Return: return this.parseReturn();
             default: return this.parseExpr();
         }
     }
@@ -130,9 +131,18 @@ export default class Parser {
 
     }
 
+    parseReturn(): Stmt {
+        this.pop(); //eat "return"
+        let on = this.parseExpr();
+        let ret =  {kind: "Return", on} as Return;
+        this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Return Statement]");
+        return ret;
+    }
+
     parseDecl(semiReq : boolean): Stmt {
         const lc = this.pop().type == TType.Const;
         let type: string | undefined = undefined;
+        let evalue;
         //lists
         if (this.peek().type == TType.Colon) {
             this.pop(); //eat :
@@ -155,9 +165,14 @@ export default class Parser {
         this.expect(TType.Equals, "Expected assignment operator (=) in declaration.");
         let decl;
         if (type != undefined) 
-            {decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
-        else {decl = {kind: "Declar", identifier, value: this.parseExpr(), constant: lc} as Declar;}
-        if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
+            { decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
+        else {
+            evalue = this.parseExpr();
+            decl = {kind: "Declar", identifier, value:evalue, constant: lc} as Declar;
+        }
+        if (semiReq && decl.value.kind != "Call") { 
+            this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
+        }
         return decl;
     }
 
@@ -477,20 +492,22 @@ export default class Parser {
         if (this.peek().type != TType.OpenSB) {
             return this.parseLogic();
         }
-        
+        if (showParsing) console.log("In parseList():        ", this.peek());
         this.pop(); //pop [
-        if (this.peek().type != TType.OpenCB) {
-            return this.parseList("array");
-        } 
+        
         const elements = new Array<Expr>();
-
+        if (this.peek().type == TType.OpenSB) {
+            elements.push(this.parseList("array"));
+        }
         while (this.not_eof() && this.peek().type != TType.CloseSB) {
-            elements.push(this.parseCondExpr());
+            if (this.peek().type != TType.Comma && this.peek().type != TType.OpenSB ) elements.push(this.parseCondExpr());
+            if (this.peek().type == TType.OpenSB) {
+                elements.push(this.parseList("array"));
+            }
             if (this.peek().type != TType.CloseSB) {
                 this.expect(TType.Comma, "Expected comma or closing curly bracket in assignment.")
             }
         }
-
         this.expect(TType.CloseSB, "Expected closing square bracket (]) in assignment");
         return {kind: "List", type, elements} as List;
     }

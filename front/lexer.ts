@@ -7,7 +7,10 @@ export let language: Language = setLang(prompt("Set language: "));
 function setLang(str: string | null): Language {
     if (str == "spanish") {
         return "spanish";
-    } else return "ht";
+    } else if (str == "english" || str == "regular") {
+        return "regular";
+    }
+        else return "ht";
 }
 
 export enum TType {
@@ -16,6 +19,7 @@ export enum TType {
     Number,
     Name, //variable names
     String,
+    Regex,
 
     //Operators and symbols
     OpenPar, ClosePar,
@@ -31,7 +35,7 @@ export enum TType {
 
     //Keywords
     Const, Let, Class, New,
-    Function, Constructor,
+    Function, Constructor, Return,
     If, Else, Switch, Case, Default,
     While, For,
     Try, Throw, Catch,
@@ -60,6 +64,7 @@ let KW: Record<string, TType> = {
     "switch": TType.Switch,
     "case": TType.Case,
     "default": TType.Default,
+    "return": TType.Return,
 
     "Stack": TType.List,
     "Queue": TType.List,
@@ -83,6 +88,7 @@ if (language == "spanish") {
         "cambia": TType.Switch,
         "caso": TType.Case,
         "predet": TType.Default,
+        "devuelve": TType.Return,
 
         "Pila": TType.List,
         "Cola": TType.List,
@@ -107,6 +113,7 @@ else if (language == "ht") {
         "player": TType.Switch,
         "bish": TType.Case,
         "mid": TType.Default,
+        "spit": TType.Return,
 
         "Stack": TType.List,
         "Queue": TType.List,
@@ -219,6 +226,8 @@ export function tokenize (source:string): Token[] {
                         str += "\\"
                     } else if (src[1] == "n") {
                         str += "\n"
+                    } else if (src[1] == "r") {
+                        str += "\\r"
                     }
                     src.shift(); src.shift();
                 } else {
@@ -233,6 +242,12 @@ export function tokenize (source:string): Token[] {
                 let num = "";
                 while (src.length > 0 && isInt(src[0])) {
                     num += src.shift();
+                }
+                if (src[0] == ".") {
+                    num += src.shift();
+                    while (src.length > 0 && isInt(src[0])) {
+                        num += src.shift();
+                    }  
                 }
                 tokens.push(addToken(num, TType.Number));
             } else if (isAlpha(src[0])) {

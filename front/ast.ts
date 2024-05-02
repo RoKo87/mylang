@@ -14,6 +14,7 @@ export type NodeType =
     | "Logic"
     | "Throw"
     | "WLoop"
+    | "Return"
 
     //VALUES
     | "Class"
@@ -24,6 +25,7 @@ export type NodeType =
     | "Object"
     | "List"
     | "Property"
+    | "Regex"
     | "String"
 
     //EXPRESSIONS
@@ -96,6 +98,11 @@ export interface Function extends Stmt {
     params: string[];
     name: string;
     body: Stmt[];
+}
+
+export interface Return extends Stmt {
+    kind: "Return";
+    on: Expr;
 }
 
 export interface Constructor extends Stmt {
@@ -179,6 +186,11 @@ export interface Strit extends Expr {
     value: string;
 }
 
+export interface Regex extends Expr {
+    kind: "Regex"
+    value: string;
+}
+
 export interface Property extends Expr {
     kind: "Property"
     key: string,
@@ -221,3 +233,21 @@ export interface Element extends Expr {
     index: Expr;
 }
 
+
+function ExprChecker(data: any): data is Expr { 
+    return true; 
+}
+
+function CallChecker(data: any): data is Call { 
+    return true; 
+}
+
+export function isExpr(data: any) {
+    if (ExprChecker(data)) return true;
+    else return false;
+}
+
+export function canSkipSemi(data: any) {
+    if (CallChecker(data)) return true;
+    else return false;
+}

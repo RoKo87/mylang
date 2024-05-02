@@ -1,8 +1,16 @@
-cook val = 6;
-
-player (val) {
-    bish 2: huff("this is 2");
-    bish 6: huff("this is 6");
-    bish mid: huff("this is mid...");
+var x = 5;
+var y = 3;
+var z = 13;
+var i = z;
+var:[] t = [];
+for (x) {
+    i += 1;
+    print(y+i);
+    t.add((y+i)*z);
 }
 
+print(t.sub(1,3));
+
+if (t[2] == 5) {
+    print("This is cool right?");
+} else print("Yeah, I know this is cool.");
