@@ -41,8 +41,8 @@ export enum TType {
     Try, Throw, Catch,
 
     //Data Structures
-    List,
-
+    List, 
+    FH,
     EOF,
 }
 
@@ -68,7 +68,8 @@ let KW: Record<string, TType> = {
 
     "Stack": TType.List,
     "Queue": TType.List,
-    "Set": TType.List
+    "Set": TType.List,
+    "FH": TType.FH,
 }
 
 if (language == "spanish") {
@@ -93,6 +94,7 @@ if (language == "spanish") {
         "Pila": TType.List,
         "Cola": TType.List,
         "Conjunto": TType.List,
+        "FH": TType.FH,
     }
 }
 
@@ -118,6 +120,7 @@ else if (language == "ht") {
         "Stack": TType.List,
         "Queue": TType.List,
         "Set": TType.List,
+        "FH": TType.FH,
     }
 }
 
@@ -254,11 +257,14 @@ export function tokenize (source:string): Token[] {
                 let ident = ""; //foo or let
                 while (src.length > 0 && (isAlpha(src[0]) || isInt(src[0]))) {
                     ident += src.shift();
+                    //for native values
+                    // if (src[0] == "." && ident == "Math")
                 }
 
                 const reserved = KW[ident];
-                if (reserved == undefined) 
+                if (reserved == undefined) {
                     tokens.push(addToken(ident, TType.Name));
+                }
                 else 
                     tokens.push(addToken(ident, reserved));
             } else if (isSkippable(src[0])) {

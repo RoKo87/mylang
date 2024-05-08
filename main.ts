@@ -7,7 +7,7 @@ import {evaluate} from "./runtime/interpreter.ts";
 import * as fs from 'node:fs';
 
 export const showParsing = false;
-const showSyntax = false;
+const showSyntax = true;
 const showEval = false;
 
 repl();

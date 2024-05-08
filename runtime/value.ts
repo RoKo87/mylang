@@ -4,7 +4,7 @@ import { Stmt } from "../front/ast.ts";
 import Environment from "./environment.ts";
 
 export type ValueType = "null" | "number" | "boolean" | "string" 
-| "object" | "native" | "custom" | "list" | "class" | "constructor" | "class object" | "error";
+| "object" | "native" | "custom" | "list" | "class" | "constructor" | "class object" | "error" | "file handler";
 
 export interface RunVal {
     type: ValueType;
@@ -98,6 +98,13 @@ export interface CtorVal extends RunVal {
     params: string[],
     envir: Environment;
     body: Stmt[];
+}
+
+export interface FHVal extends RunVal {
+    type: "file handler";
+    mode: number;
+    file: string;
+    position: number;
 }
 
 

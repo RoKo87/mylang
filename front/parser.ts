@@ -1,13 +1,14 @@
 // deno-lint-ignore-file
 
 import { showParsing } from "../main.ts";
-import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error, Case, Switcher, isExpr, canSkipSemi, Regex, Return} from "./ast.ts";
+import {Stmt, Function, Program, Expr, BinaryExpr, Number, Identifier, Declar, Assign, Property, Call, Member, Strit, Condition, WLoop, Object, Compound, FLoop, List, Element, Logic, Unary, Constructor, Class, ClassObj, ErrorHandler, Error, Case, Switcher, isExpr, canSkipSemi, Regex, Return, FH} from "./ast.ts";
 import {tokenize, Token, TType, language} from "./lexer.ts";
 import { langerr, langget } from "./mode.ts";
 
 export default class Parser {
 
     private tokens: Token[] = [];
+    private popped: Token[] = [];
 
     private not_eof (): boolean {
         return this.tokens[0].type != TType.EOF;
@@ -20,6 +21,7 @@ export default class Parser {
 
     private pop() {
         const prev = this.tokens.shift() as Token;
+        this.popped.push(prev);
         return prev;
     }
 
@@ -150,6 +152,7 @@ export default class Parser {
             if (arg.type == TType.OpenSB) {
                 if (this.pop().type == TType.CloseSB) type = "array";
             } else if (arg.type == TType.List) type = arg.value;
+            else if (arg.type == TType.FH) type = "FH";
             // console.log(type);
         }
         const identifier = this.expect(TType.Name, langerr(language, "e_varname")).value;
@@ -164,13 +167,16 @@ export default class Parser {
 
         this.expect(TType.Equals, "Expected assignment operator (=) in declaration.");
         let decl;
-        if (type != undefined) 
+        if (type != undefined && type != "FH") 
             { decl = {kind: "Declar", identifier, value: this.parseList(type), constant: lc} as Declar;}
+        else if (type == "FH") {
+            decl = {kind: "Declar", identifier, value: this.parseFH(), constant: lc} as Declar;
+        }
         else {
             evalue = this.parseExpr();
             decl = {kind: "Declar", identifier, value:evalue, constant: lc} as Declar;
         }
-        if (semiReq && decl.value.kind != "Call") { 
+        if (semiReq && decl.value.kind != "Call" && this.popped[this.popped.length - 1].type != TType.Semi) { 
             this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
         }
         return decl;
@@ -512,6 +518,10 @@ export default class Parser {
         return {kind: "List", type, elements} as List;
     }
 
+    private parseFH(): Expr {
+        return {kind: "FH", call: this.parseExpr()} as FH;
+    }
+
     private parseLogic(): Expr {
         let left = this.parseCondExpr();
         while (this.peek().value == "&" || this.peek().value == "|" ) {
@@ -571,7 +581,12 @@ export default class Parser {
 
         while (this.peek().value == "*" || (this.peek().value == "/" || this.peek().value == "%")) {
             const operator = this.pop().value;
-            const right = this.parsePrimaryExpr();
+            let right = this.parsePrimaryExpr();
+            if (this.peek().type == TType.Dot) {
+                this.pop();
+                right = {kind: "Member", object: {kind: "Identifier", symbol: (right as Identifier).symbol} as Identifier, 
+                prop: this.parsePrimaryExpr(), computed: false} as Member;
+            }
             left = {
                 kind: "Binary",
                 left,
@@ -625,7 +640,7 @@ export default class Parser {
             throw "Missing closing parenthesis for arguments";
         this.pop();
         end = this.peek();
-        if (end.type != TType.Semi && end.type != TType.ClosePar && semiReq)
+        if (end.type != TType.Semi && end.type != TType.ClosePar && end.type != TType.BinOp && semiReq)
             throw "Expected a semicolon at the end";
         else if (end.type == TType.Semi && semiReq) this.pop();
         return args;

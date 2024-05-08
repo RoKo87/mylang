@@ -20,6 +20,7 @@ export type NodeType =
     | "Class"
     | "Class Object"
     | "Error" 
+    | "FH"
     | "Identifier" 
     | "Number" 
     | "Object"
@@ -77,6 +78,11 @@ export interface Case extends Stmt {
     value?: Expr;
     def: boolean;
     body: Stmt[];
+}
+
+export interface FH extends Expr {
+    kind: "FH";
+    call: Expr;
 }
 
 export interface ErrorHandler extends Stmt {

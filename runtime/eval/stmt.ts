@@ -1,11 +1,12 @@
 // deno-lint-ignore-file
 
-import { BinaryExpr, Class, Condition, Constructor, Declar, ErrorHandler, FLoop, Function, Identifier, Program, Return, Stmt, WLoop } from "../../front/ast.ts";
-import { TType } from "../../front/lexer.ts";
+import { BinaryExpr, Call, Class, Condition, Constructor, Declar, ErrorHandler, FH, FLoop, Function, Identifier, Member, Program, Return, Stmt, WLoop } from "../../front/ast.ts";
+import { TType, language } from "../../front/lexer.ts";
+import { langget } from "../../front/mode.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BoolVal, ClassVal, CtorVal, CustomVal, ErrorVal, INull, NullVal, NumberVal, RunVal } from "../value.ts";
-import { evalCond } from "./expr.ts";
+import { evalCall, evalCond } from "./expr.ts";
 
 export function evalProgram (program: Program, env: Environment): RunVal {
     let lastEval: RunVal = INull();
@@ -19,6 +20,14 @@ export function evalProgram (program: Program, env: Environment): RunVal {
 export function evalDecl(decl: Declar, env: Environment): RunVal {
     const value = decl.value ? evaluate(decl.value, env) : INull();
     return env.declare(decl.identifier, value, decl.constant);
+}
+
+export function evalFH(fh: FH, env: Environment): RunVal {
+    let funccheck = (fh.call as Call).name as Member;
+    if ((funccheck.object as Identifier).symbol != "File" && (funccheck.prop as Identifier).symbol != langget(language, "prepare")) {
+        throw "Incorrect declaration for a file handler.";
+    }
+    return evalCall(fh.call as Call, env);
 }
 
 export function evalErrHand(err: ErrorHandler, env: Environment): RunVal {
