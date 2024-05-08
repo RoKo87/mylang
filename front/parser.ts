@@ -176,7 +176,7 @@ export default class Parser {
             evalue = this.parseExpr();
             decl = {kind: "Declar", identifier, value:evalue, constant: lc} as Declar;
         }
-        if (semiReq && decl.value.kind != "Call" && this.popped[this.popped.length - 1].type != TType.Semi) { 
+        if (semiReq && (decl.value as Stmt).kind != "Call" && this.popped[this.popped.length - 1].type != TType.Semi) { 
             this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Declaration]");
         }
         return decl;
