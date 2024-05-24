@@ -490,7 +490,7 @@ export default class Environment {
         return value;
     }
 
-    public remove (name: string): RunVal {
+    public remove (name: string): void {
         if (this.lookup(name) != undefined) {
             this.variables.delete(name);
             this.constants.delete(name);

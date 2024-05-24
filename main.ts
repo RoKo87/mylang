@@ -8,7 +8,7 @@ import * as fs from 'node:fs';
 
 export const showParsing = false;
 const showSyntax = true;
-const showEval = false;
+const showEval = true;
 
 repl();
 //may need to be async

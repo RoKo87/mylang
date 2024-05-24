@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 lethimcook calc(x, y) {
     cook inside = 1000/(Math.sqrt(x + 0.5)) - 0.031*(x + 0.5);
     spit Math.sqrt(inside/y);
@@ -56,3 +57,7 @@ huff("Your score is: " + pts);
 
 
 
+=======
+bill (6 > 2)
+  huff("Hello");
+>>>>>>> 0550cf1cb6fcc721a04bddf0beb98f037a52eaaa
