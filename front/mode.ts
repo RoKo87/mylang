@@ -6,6 +6,7 @@ export type Language = "regular" | "spanish" | "ht"
 
 export const LMap: Record<Language, Record<string, string>> = {
     "regular": {
+        "abs": "abs",
         "add": "add",
         "arcsin": "arcsin",
         "arccos": "arccos",
@@ -21,6 +22,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "degToRad": "degToRad",
         "EVALUATION": "EVALUATION",
         "File": "File",
+        "floor": "floor",
         "func": "func",
         "true": "true",
         "false": "false",
@@ -38,6 +40,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "print": "print",
         "println": "println",
         "Queue": "Queue",
+        "random": "random",
         "radtoDeg": "radtoDeg",
         "remove": "remove",
         "report": "report",
@@ -52,6 +55,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "tan": "tan",
     },
     "spanish": {
+        "abs": "abs",
         "add": "agrega",
         "arcsin": "arcsen",
         "arccos": "arccos",
@@ -67,6 +71,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "degToRad": "gradARad",
         "EVALUATION": "EVALUACIÓN",
         "File": "Archivo",
+        "floor": "piso",
         "func": "func",
         "true": "cierto",
         "false": "falso",
@@ -84,6 +89,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "print": "imprime",
         "println": "imprimeln",
         "Queue": "Cola",
+        "random": "aleat",
         "radtoDeg": "radAGrad",
         "remove": "quita",
         "report": "reporta",
@@ -98,6 +104,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "tan": "tan",
     },
     "ht": {
+        "abs": "abs",
         "add": "add",
         "arcsin": "arcsin",
         "arccos": "arccos",
@@ -113,6 +120,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "degToRad": "degToRad",
         "EVALUATION": "EVALUATION",
         "File": "File",
+        "floor": "floor",
         "func": "lethimcook",
         "true": "tej",
         "false": "allen",
@@ -130,6 +138,7 @@ export const LMap: Record<Language, Record<string, string>> = {
         "print": "huff",
         "println": "huffln",
         "Queue": "Queue",
+        "random": "random",
         "radtoDeg": "radtoDeg",
         "remove": "gtfo",
         "report": "spitfax",

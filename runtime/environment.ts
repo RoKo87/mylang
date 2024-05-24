@@ -171,6 +171,34 @@ export function gscope() {
         return {type: "number", value: ip * (Math.PI/180)} as RunVal;
     }), true);
 
+    env.declare(langget(language, "floor"), INative((args, scope, object) => {
+        if (args.length != 1) throw "This function must have 1 argument.";
+        if ((object as Identifier).symbol != langget(language, "Math")) throw "Did you mean 'Math.floor()' ?";
+        if (args[0].type != "number") throw "This function must be input a number."
+
+        return INum(Math.floor(args[0].value));
+    }), true);
+
+    env.declare(langget(language, "random"), INative((args, scope, object) => {
+        if (args.length < 0 || args.length > 2) throw "This function must have between 0 to 2 arguments.";
+        if ((object as Identifier).symbol != langget(language, "Math")) throw "Did you mean 'Math.random()' ?";
+        
+        if (args.length == 0) return INum(Math.random());
+        else if (args.length == 1 && args[0].type == "number") return INum(Math.random() * args[0].value);
+        else if (args.length == 2 && args[0].type == "number" && args[1].type == "number") return INum(args[0].value + (Math.random() * (args[1].value - args[0].value)));
+        else throw "The arguments passed in the function are not compatible.";
+    }), true);
+
+    env.declare(langget(language, "abs"), INative((args, scope, object) => {
+        if (args.length != 1) throw "This function must have 1 argument.";
+        if ((object as Identifier).symbol != langget(language, "Math")) throw "Did you mean 'Math.abs()' ?";
+        if (args[0].type != "number") throw "This function must be input a number."
+
+        return INum(Math.abs(args[0].value));
+    }), true);
+
+
+
     env.declare(langget(language, "Math"), 
         {type: "object", props:
             new Map<string, RunVal>([

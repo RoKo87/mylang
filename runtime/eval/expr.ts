@@ -75,6 +75,13 @@ export function evalBinary (binop: BinaryExpr, env: Environment): RunVal {
         return {value: res, type: "string"} as StringVal;
     }
 
+    if (left.type == "string" && right.type == "number" && binop.operator == "+") {
+        //concatenation
+        let res = "";
+        res = (left as StringVal).value + (right as NumberVal).value;
+        return {value: res, type: "string"} as StringVal;
+    }
+
     return INull();
 }
 
@@ -98,7 +105,7 @@ export function evalLogic (logic: Logic, env: Environment): RunVal {
     const left = evaluate(logic.left, env);
     const right = evaluate(logic.right, env);
     const log = logic.logic;
-
+    // console.log(left.value, right.value);
     if (left.type == "number" && right.type == "number") {
         return evalMath(left as NumberVal, right as NumberVal, logic.logic);
     }

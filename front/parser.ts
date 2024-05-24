@@ -51,7 +51,7 @@ export default class Parser {
         }
         } catch (e) { console.log("Syntax Error: ", e);}
 
-        if (!showParsing) console.log(langerr(language, "a_parsesuccess"))
+        // if (!showParsing) console.log(langerr(language, "a_parsesuccess"))
         return program;
     }
 
@@ -137,7 +137,9 @@ export default class Parser {
         this.pop(); //eat "return"
         let on = this.parseExpr();
         let ret =  {kind: "Return", on} as Return;
-        this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing a Return Statement]");
+        if (this.peek().type == TType.Semi) this.pop();
+            else if (this.popped[this.popped.length - 1].type == TType.Semi) this.peek();
+            else throw "Statement must end with semicolon [error source: Parsing a Return Statement]";
         return ret;
     }
 
@@ -223,7 +225,7 @@ export default class Parser {
         let condition: Expr;
         this.expect(TType.OpenPar, "Expected open parenthesis that begins condition.");
         if (this.peek().type == TType.Name || this.peek().type == TType.Number || this.peek().type == TType.String) {
-            condition = this.parseCondExpr();
+            condition = this.parseLogic();
         }
         else {
             throw "Invalid conditional expression for if-statement."
@@ -262,8 +264,9 @@ export default class Parser {
         this.pop(); //eat keyword
         let condition: Expr;
         this.expect(TType.OpenPar, "Expected open parenthesis that begins condition.");
-        if (this.peek().type == TType.Name || this.peek().type == TType.Number || this.peek().type == TType.String) {
-            condition = this.parseCondExpr();
+        if (this.peek().type == TType.Name || this.peek().type == TType.Number 
+        || this.peek().type == TType.String || this.peek().value == "!") {
+            condition = this.parseLogic();
         } else {
             throw "Invalid conditional expression."
         }
@@ -430,17 +433,19 @@ export default class Parser {
     }
 
     private parseAssign(semiReq : boolean): Expr {
-        const left = this.parseCompound();
+        const left = this.parseCompound(semiReq);
         if (this.peek().type == TType.Equals) {
             this.pop();
             const right = this.parseAssign(false);
-            if (semiReq) this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Assignment]");
+            if (this.peek().type == TType.Semi && semiReq) this.pop();
+            else if (this.popped[this.popped.length - 1].type == TType.Semi && semiReq) this.peek();
+            else if (semiReq) throw "Statement must end with semicolon [error source: Parsing an Assignment]";
             return {value: right, to: left, kind: "Assign"} as Assign;
         }
         return left;
     }
 
-    private parseCompound(): Expr {
+    private parseCompound(semiReq : boolean): Expr {
         let left = this.parseObject();
         while (this.peek().value == "+=" || this.peek().value == "-=" || this.peek().value == "*="
         || this.peek().value == "/=" || this.peek().value == "%=") {
@@ -448,7 +453,9 @@ export default class Parser {
             const right = this.parseObject();
             if (left.kind != "Identifier") 
                 throw "The left-hand side of a compound binary expression must be a variable.";
-                this.expect(TType.Semi, "Statement must end with semicolon [error source: Parsing an Compound]");
+            if (this.peek().type == TType.Semi) this.pop();
+            else if (this.popped[this.popped.length - 1].type == TType.Semi) this.peek();
+            else if (semiReq) throw "Statement must end with semicolon [error source: Parsing a Compound]";
                 left = {
                 kind: "Compound Binary",
                 left,
@@ -606,9 +613,10 @@ export default class Parser {
             expr = {kind: "Unary", on, operator, pre: true} as Unary;
         }
         else return this.parseCME();
-
         return expr;
     }
+
+
 
     //calls, members, and elements
     private parseCME(): Expr {

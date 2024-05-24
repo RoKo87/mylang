@@ -1,0 +1,58 @@
+lethimcook calc(x, y) {
+    cook inside = 1000/(Math.sqrt(x + 0.5)) - 0.031*(x + 0.5);
+    spit Math.sqrt(inside/y);
+}
+
+cook target = Math.floor(Math.random(1000) + 1);
+cook attempts = 0;
+cook pts = 0;
+cook right = allen;
+cook:[] guesses = [];
+huffln("Guess the number! You have 10 attempts");
+
+prakhar (!right & attempts < 10) {
+    cook guess = preesha("Guess " + (attempts + 1) + ": ");
+    attempts += 1;
+    cook dist = Math.abs(target - guess);
+
+    bill (dist > 600) huffln("YOU'RE EXTREMELY FAR AWAY!!!");
+    opp bill (dist > 450) huffln("YOU'RE SO FAR AWAY!!!");
+    opp bill (dist > 300) huffln("You're far away.");
+    opp bill (dist > 225) huffln("You're not that far away.");
+    opp bill (dist > 150) huffln("You're in the range.");
+    opp bill (dist > 100) huffln("You're close.");
+    opp bill (dist > 75) huffln("You're actually close.");
+    opp bill (dist > 50) huffln("You're really close.");
+    opp bill (dist > 25) huffln("You're almost there.");
+    opp bill (dist > 10) huffln("YOU'RE ALMOST THERE!");
+    opp bill (dist > 5) huffln("YOU'RE ALMOST THERE!!!");
+    opp bill (dist > 2) huffln("YOU'RE EXTREMELY CLOSE!!!");
+    opp bill (dist > 0) huffln("YOU'RE RIGHT BY IT!!!");
+    opp {
+        right = tej;
+        huffln("YOU GOT IT!!!");
+    }
+    pts += calc(dist, attempts);
+    huff("Score: " + Math.floor(pts));
+    huff("\n");
+
+    guesses.add(dist);
+} 
+
+bill (right) {
+    huff("You guessed the number in " + attempts + " attempts");
+    pts += 1000/attempts;
+} opp {
+    huff("The number was: " + target);
+    cook min = 10000;
+    george (cook i = 0, i < guesses.length - 1, i += 1) {
+        bill (guesses[i] < min) min = guesses[i];
+    }
+    pts += (2000 - min + guesses[9]) / 300;
+    
+}
+pts = Math.floor(pts);
+huff("Your score is: " + pts);
+
+
+

@@ -77,8 +77,7 @@ export function evalCtor(decl: Constructor, env: Environment, cl: string, iter: 
 
 export function evalCondStmt(cond: Condition, env: Environment): RunVal {
     let cnode = (cond.condition as BinaryExpr)
-    if ((evalCond(evaluate(cnode.left, env), evaluate(cnode.right, env), 
-    cnode.operator) as BoolVal).value == true) {
+    if ((evaluate(cond.condition, env) as BoolVal).value == true) {
         let result: RunVal = INull();
         const scope = new Environment(env);
         for (const stmt of cond.body) {
@@ -97,8 +96,7 @@ export function evalCondStmt(cond: Condition, env: Environment): RunVal {
 
 export function evalWLoop(wloop: WLoop, env: Environment): RunVal {
     let cnode = (wloop.condition as BinaryExpr)
-    while ((evalCond(evaluate(cnode.left, env), evaluate(cnode.right, env), 
-    cnode.operator) as BoolVal).value == true) {
+    while ((evaluate(wloop.condition, env) as BoolVal).value == true) {
         let result: RunVal = INull();
         const scope = new Environment(env);
         for (const stmt of wloop.body) {
