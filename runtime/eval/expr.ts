@@ -2,7 +2,7 @@
 
 import { Assign, BinaryExpr, Call, ClassObj, Compound, Element, Error, Expr, Identifier, List, Logic, Member, Number, Object, Stmt, Strit, Switcher, Unary } from "../../front/ast.ts";
 import { language } from "../../front/lexer.ts";
-import { langget } from "../../front/mode.ts";
+import { langget, langerr } from "../../front/mode.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BoolVal, ClassObjVal, ClassVal, CustomVal, ErrorVal, IBool, INull, INum, ListVal, NativeVal, NumberVal, ObjVal, RunVal, StringVal } from "../value.ts";
@@ -15,8 +15,12 @@ export function evalMath(left: NumberVal, right: NumberVal, op: string): RunVal 
         res = left.value - right.value;
     else if (op == "*")
         res = left.value * right.value;
-    else if (op == "/")
+    else if (op == "/") {
+        if (right.value == 0) {
+            throw langerr(language, "e_div0");
+        }
         res = left.value / right.value;
+    }
     else if (op == "%") 
         res = left.value % right.value;
     else if (op == "|") 
@@ -250,7 +254,7 @@ export function evalElement (elem: Element, env: Environment): RunVal {
     else length = (list as ListVal).elements.length;
 
     if (index >= length || index < 0) {
-        throw `${index} is out of bounds for an index of ${(elem.list as Identifier).symbol}.`
+        throw `${index} ${langerr(language, "e_oob")} "${(elem.list as Identifier).symbol}".`
     } 
     
     if (list.type == "string") {

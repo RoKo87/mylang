@@ -139,7 +139,7 @@ export default class Parser {
         let ret =  {kind: "Return", on} as Return;
         if (this.peek().type == TType.Semi) this.pop();
             else if (this.popped[this.popped.length - 1].type == TType.Semi) this.peek();
-            else throw "Statement must end with semicolon [error source: Parsing a Return Statement]";
+            else throw langerr(language, "e_nosemi");
         return ret;
     }
 
@@ -641,7 +641,7 @@ export default class Parser {
     }
 
     private parseArgs(semiReq: boolean): Expr[] {
-        this.expect(TType.OpenPar, "Expected open parenthesis");
+        this.expect(TType.OpenPar, langerr(language, "e_openpar"));
         const args = this.peek().type == TType.ClosePar ? [] : this.parseArgList();
         let end = this.peek().type == TType.ClosePar ? this.peek() : this.pop();
         if (end.type != TType.ClosePar) 
@@ -649,7 +649,7 @@ export default class Parser {
         this.pop();
         end = this.peek();
         if (end.type != TType.Semi && end.type != TType.ClosePar && end.type != TType.BinOp && semiReq)
-            throw "Expected a semicolon at the end";
+            throw langerr(language, "e_nosemi");
         else if (end.type == TType.Semi && semiReq) this.pop();
         return args;
     }

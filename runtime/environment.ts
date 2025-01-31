@@ -373,6 +373,7 @@ export function gscope() {
         if (obj.type != "string" && obj.type != "list") throw "This function only accepts strings and lists as the object."
         return IBool(false); }), true)
 
+        //finds an index
     env.declare(langget(language, "index"), INative((args, scope, object) => {
         if (object == undefined) throw "This member function does not have an object."
         let obj = evaluate(object, env);
@@ -392,6 +393,26 @@ export function gscope() {
         if (obj.type != "string" && obj.type != "list") throw "This function only accepts strings and lists as the object."
         return INum(-1); }), true)
 
+        //reverse
+    env.declare(langget(language, "reverse"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object.";
+        if (args.length > 0) throw "This member function does not accept parameters.";
+        let obj = evaluate(object, env);
+
+        if (obj.type == "string") {
+            let str = (evaluate(object, env) as StringVal).value
+            return {type: "string", value: str.split('').reverse().join('') } as StringVal
+        }
+        else if (obj.type == "list") {
+            let arrv = (obj as ListVal);
+            let arr = arrv.elements;
+            let lclass = arrv.class;
+            return {type: "list", class: lclass, elements: arr.reverse()} as ListVal
+        }
+        else throw "This function only accepts strings and lists as the object."
+        }), true)
+
+        //substrings and sub-arrays
     env.declare(langget(language, "sub"), INative((args, scope, object) => {
         if (object == undefined) throw "This member function does not have an object."
         let obj = evaluate(object, env);
@@ -421,40 +442,23 @@ export function gscope() {
         return {type: "string", value: msg} as StringVal
         }), true)
 
-    //save this one for last
-    env.declare(langget(language, "matches"), INative((args, scope, object) => {
-        if (object == undefined) throw "This member function does not have an object." ;
-        if (args.length != 1) throw "This function must receive 1 parameter.";
-        if (evaluate(object, env).type != "string") throw "This function only works on a string";
-        let tested = evaluate(object, env).value;
-        let strval = args[0];
-        let str = strval.value;
-        if (str.substring(0, 2) != "\\r") throw "The parameter for the matches() function must be a regular expression.";
-        str = str.substring(2);
-        if (str.substring(0, 1) == " ") str.substring(1);
+        //sort
+    env.declare(langget(language, "sort"), INative((args, scope, object) => {
+        if (object == undefined) throw "This member function does not have an object.";
+        if (args.length > 0) throw "This member function does not accept parameters.";
+        let obj = evaluate(object, env);
 
-        let testarr = [...tested];
-        let strarr = [...str];
-        let check = true; 
-
-        while (check && testarr.length > 0) {
-            //main check
-            if (testarr[0] == strarr[0]) {
-                if (strarr[1] == "#") {
-                    let quantity = strarr[2];
-                    let modif; let atmost;
-                    if (quantity != ">") {
-                        if (strarr[3] == "<" || strarr[3] == ">") modif = strarr[3];
-                        else if (strarr[3] = "-") {
-                            modif = strarr[3];
-                            atmost = strarr[4];
-                        }
-                    }
-                }
-            } else {check = false;}
+        if (obj.type == "string") {
+            let str = (evaluate(object, env) as StringVal).value
+            return {type: "string", value: str.split('').sort().join('') } as StringVal
         }
-
-        return IBool(check);
+        else if (obj.type == "list") {
+            let arrv = (obj as ListVal);
+            let arr = arrv.elements;
+            let lclass = arrv.class;
+            return {type: "list", class: lclass, elements: arr.sort()} as ListVal
+        }
+        else throw "This function only accepts strings and lists as the object."
         }), true)
 
     return env;

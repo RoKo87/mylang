@@ -6,8 +6,9 @@ import Environment, { gscope } from "./runtime/environment.ts";
 import {evaluate} from "./runtime/interpreter.ts";
 import * as fs from 'node:fs';
 
+//CHANGE THESE TO CHANGE CONSOLE OUTPUT!
 export const showParsing = false;
-const showSyntax = true;
+const showSyntax = false;
 const showEval = true;
 
 repl();
